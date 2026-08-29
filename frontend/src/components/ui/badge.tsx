@@ -32,13 +32,13 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
   )
 }
 
-export interface BadgeProps {
+export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   children: React.ReactNode
   variant?: 'default' | 'success' | 'warning' | 'danger' | 'info'
   className?: string
 }
 
-export function Badge({ children, variant = 'default', className }: BadgeProps) {
+export function Badge({ children, variant = 'default', className, style, ...props }: BadgeProps) {
   const styleMap = {
     default: { background: 'var(--bg-surface-elevated)', color: 'var(--text-secondary)' },
     success: { background: 'var(--status-recovering-bg)', color: 'var(--status-recovering)' },
@@ -54,7 +54,9 @@ export function Badge({ children, variant = 'default', className }: BadgeProps) 
         ...styleMap,
         border: '1px solid currentColor',
         borderColor: 'rgba(255,255,255,0.08)',
+        ...style,
       }}
+      {...props}
     >
       {children}
     </span>

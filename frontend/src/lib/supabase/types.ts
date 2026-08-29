@@ -64,6 +64,7 @@ export interface Database {
           avatar_url?: string | null
           updated_at?: string
         }
+        Relationships: []
       }
       projects: {
         Row: {
@@ -110,6 +111,14 @@ export interface Database {
           visibility?: ProjectVisibility
           updated_at?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "projects_manager_id_fkey"
+            columns: ["manager_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       project_members: {
         Row: {
@@ -131,7 +140,22 @@ export interface Database {
           project_id?: string
           user_id?: string
           role?: ProjectMemberRole
+          joined_at?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "project_members_project_id_fkey"
+            columns: ["project_id"]
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_members_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       plots: {
         Row: {
@@ -178,6 +202,14 @@ export interface Database {
           adoptable?: boolean
           updated_at?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "plots_project_id_fkey"
+            columns: ["project_id"]
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       species: {
         Row: {
@@ -203,6 +235,7 @@ export interface Database {
           category?: SpeciesCategory
           native?: boolean
         }
+        Relationships: []
       }
       planting_events: {
         Row: {
@@ -231,6 +264,20 @@ export interface Database {
           quantity?: number
           notes?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "planting_events_plot_id_fkey"
+            columns: ["plot_id"]
+            referencedRelation: "plots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planting_events_species_id_fkey"
+            columns: ["species_id"]
+            referencedRelation: "species"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       field_monitorings: {
         Row: {
@@ -290,6 +337,20 @@ export interface Database {
           sync_status?: SyncStatus
           synced_at?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "field_monitorings_plot_id_fkey"
+            columns: ["plot_id"]
+            referencedRelation: "plots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "field_monitorings_observer_id_fkey"
+            columns: ["observer_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       photos: {
         Row: {
@@ -327,6 +388,14 @@ export interface Database {
           exif_lon?: number | null
           file_size_bytes?: number | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "photos_monitoring_id_fkey"
+            columns: ["monitoring_id"]
+            referencedRelation: "field_monitorings"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       interventions: {
         Row: {
@@ -360,6 +429,20 @@ export interface Database {
           description?: string
           photo_url?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "interventions_plot_id_fkey"
+            columns: ["plot_id"]
+            referencedRelation: "plots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interventions_created_by_fkey"
+            columns: ["created_by"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       satellite_observations: {
         Row: {
@@ -418,6 +501,14 @@ export interface Database {
           valid_pixel_pct?: number
           quality_flag?: QualityFlag
         }
+        Relationships: [
+          {
+            foreignKeyName: "satellite_observations_plot_id_fkey"
+            columns: ["plot_id"]
+            referencedRelation: "plots"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       adoptions: {
         Row: {
@@ -449,6 +540,20 @@ export interface Database {
           status?: AdoptionStatus
           updated_at?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "adoptions_plot_id_fkey"
+            columns: ["plot_id"]
+            referencedRelation: "plots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adoptions_supporter_id_fkey"
+            columns: ["supporter_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       project_updates: {
         Row: {
@@ -482,7 +587,66 @@ export interface Database {
           content?: string
           update_type?: UpdateType
         }
+        Relationships: [
+          {
+            foreignKeyName: "project_updates_project_id_fkey"
+            columns: ["project_id"]
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_updates_plot_id_fkey"
+            columns: ["plot_id"]
+            referencedRelation: "plots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_updates_author_id_fkey"
+            columns: ["author_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
+      audit_logs: {
+        Row: {
+          id: string
+          user_id: string | null
+          action: string
+          entity_type: string
+          entity_id: string
+          old_values: Json | null
+          new_values: Json | null
+          ip_address: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          action: string
+          entity_type: string
+          entity_id: string
+          old_values?: Json | null
+          new_values?: Json | null
+          ip_address?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          action?: string
+          entity_type?: string
+          entity_id?: string
+          old_values?: Json | null
+          new_values?: Json | null
+          ip_address?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
     }
     Functions: {
       get_project_kpi: {
@@ -513,5 +677,33 @@ export interface Database {
         }
       }
     }
+    Enums: {
+      user_role: UserRole
+      project_status: ProjectStatus
+      project_visibility: ProjectVisibility
+      rehabilitation_type: RehabilitationType
+      monitoring_status: MonitoringStatus
+      plant_condition: PlantCondition
+      species_category: SpeciesCategory
+      intervention_type: InterventionType
+      sync_status: SyncStatus
+      quality_flag: QualityFlag
+      adoption_status: AdoptionStatus
+      update_type: UpdateType
+      project_member_role: ProjectMemberRole
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }
+
+export type Project = Database['public']['Tables']['projects']['Row']
+export type Plot = Database['public']['Tables']['plots']['Row']
+export type UserProfile = Database['public']['Tables']['users']['Row']
+export type FieldMonitoring = Database['public']['Tables']['field_monitorings']['Row']
+export type Photo = Database['public']['Tables']['photos']['Row']
+export type Intervention = Database['public']['Tables']['interventions']['Row']
+export type PlantingEvent = Database['public']['Tables']['planting_events']['Row']
+export type Species = Database['public']['Tables']['species']['Row']
+export type ProjectMember = Database['public']['Tables']['project_members']['Row']
