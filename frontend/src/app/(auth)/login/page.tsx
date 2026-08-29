@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Trees, Lock, Mail, AlertCircle, ArrowRight } from 'lucide-react'
+import { Trees, AlertCircle } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -53,18 +53,18 @@ export default function LoginPage() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1.5rem',
-        background: 'radial-gradient(ellipse at top, #064e3b 0%, #090d16 65%)',
+        background: 'radial-gradient(ellipse at top, #ecfdf5 0%, #f8fafc 70%)',
       }}
     >
       <div
-        className="glass-panel"
         style={{
           width: '100%',
           maxWidth: '440px',
-          padding: '2.25rem',
-          backgroundColor: 'rgba(17, 24, 39, 0.85)',
+          padding: '2.5rem 2.25rem',
+          backgroundColor: '#ffffff',
           boxShadow: 'var(--shadow-xl)',
-          border: '1px solid rgba(16, 185, 129, 0.25)',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: 'var(--radius-lg)',
         }}
       >
         {/* Logo & Header */}
@@ -74,18 +74,20 @@ export default function LoginPage() {
               width: '48px',
               height: '48px',
               borderRadius: 'var(--radius-md)',
-              background: 'linear-gradient(135deg, var(--primary-500), var(--primary-700))',
+              background: 'linear-gradient(135deg, var(--primary-600), var(--primary-800))',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#ffffff',
-              boxShadow: 'var(--shadow-glow-emerald)',
+              boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)',
               marginBottom: '1rem',
             }}
           >
             <Trees size={28} />
           </div>
-          <h1 style={{ fontSize: '1.4rem', marginBottom: '0.35rem' }}>Masuk ke REHABTRACK</h1>
+          <h1 style={{ fontSize: '1.4rem', marginBottom: '0.35rem', color: 'var(--text-primary)' }}>
+            Masuk ke REHABTRACK
+          </h1>
           <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>
             Pantau dan verifikasi pemulihan lahan rehabilitasi Anda
           </p>
@@ -97,7 +99,7 @@ export default function LoginPage() {
               padding: '0.75rem',
               borderRadius: 'var(--radius-sm)',
               background: 'var(--status-at-risk-bg)',
-              border: '1px solid rgba(244, 63, 94, 0.3)',
+              border: '1px solid rgba(225, 29, 72, 0.3)',
               color: 'var(--status-at-risk)',
               fontSize: '0.825rem',
               display: 'flex',
@@ -151,7 +153,7 @@ export default function LoginPage() {
           }}
         >
           Belum memiliki akun?{' '}
-          <Link href="/register" style={{ color: 'var(--primary-400)', fontWeight: 600 }}>
+          <Link href="/register" style={{ color: 'var(--primary-700)', fontWeight: 600 }}>
             Daftar Akun Baru
           </Link>
         </div>

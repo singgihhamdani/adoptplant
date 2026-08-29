@@ -99,8 +99,9 @@ export default function ProjectDetailPage() {
         className="glass-panel"
         style={{
           padding: '1.75rem',
-          background: 'linear-gradient(135deg, rgba(6, 78, 59, 0.4) 0%, rgba(17, 24, 39, 0.85) 100%)',
-          borderColor: 'rgba(16, 185, 129, 0.25)',
+          background: 'linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%)',
+          borderColor: 'var(--primary-200)',
+          boxShadow: 'var(--shadow-sm)',
         }}
       >
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
@@ -128,13 +129,13 @@ export default function ProjectDetailPage() {
           </Badge>
         </div>
 
-        <h1 style={{ fontSize: '1.65rem', marginBottom: '0.5rem', color: '#ffffff' }}>
+        <h1 style={{ fontSize: '1.65rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
           {project.name}
         </h1>
 
         <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <MapPin size={16} style={{ color: 'var(--primary-400)' }} />
+            <MapPin size={16} style={{ color: 'var(--primary-600)' }} />
             <span>{project.location_name}, {project.province}</span>
           </div>
 
@@ -170,8 +171,8 @@ export default function ProjectDetailPage() {
             padding: '0.5rem 1rem',
             background: 'transparent',
             border: 'none',
-            borderBottom: activeTab === 'overview' ? '2px solid var(--primary-500)' : '2px solid transparent',
-            color: activeTab === 'overview' ? 'var(--primary-400)' : 'var(--text-muted)',
+            borderBottom: activeTab === 'overview' ? '2px solid var(--primary-600)' : '2px solid transparent',
+            color: activeTab === 'overview' ? 'var(--primary-700)' : 'var(--text-muted)',
             fontWeight: 600,
             fontSize: '0.875rem',
             cursor: 'pointer',
@@ -186,8 +187,8 @@ export default function ProjectDetailPage() {
             padding: '0.5rem 1rem',
             background: 'transparent',
             border: 'none',
-            borderBottom: activeTab === 'plots' ? '2px solid var(--primary-500)' : '2px solid transparent',
-            color: activeTab === 'plots' ? 'var(--primary-400)' : 'var(--text-muted)',
+            borderBottom: activeTab === 'plots' ? '2px solid var(--primary-600)' : '2px solid transparent',
+            color: activeTab === 'plots' ? 'var(--primary-700)' : 'var(--text-muted)',
             fontWeight: 600,
             fontSize: '0.875rem',
             cursor: 'pointer',
@@ -202,8 +203,8 @@ export default function ProjectDetailPage() {
             padding: '0.5rem 1rem',
             background: 'transparent',
             border: 'none',
-            borderBottom: activeTab === 'members' ? '2px solid var(--primary-500)' : '2px solid transparent',
-            color: activeTab === 'members' ? 'var(--primary-400)' : 'var(--text-muted)',
+            borderBottom: activeTab === 'members' ? '2px solid var(--primary-600)' : '2px solid transparent',
+            color: activeTab === 'members' ? 'var(--primary-700)' : 'var(--text-muted)',
             fontWeight: 600,
             fontSize: '0.875rem',
             cursor: 'pointer',
@@ -285,7 +286,7 @@ export default function ProjectDetailPage() {
                       </Link>
                     </h4>
 
-                    <span style={{ fontSize: '0.8rem', color: 'var(--primary-400)', fontWeight: 500, display: 'block', marginBottom: '0.5rem' }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--primary-700)', fontWeight: 500, display: 'block', marginBottom: '0.5rem' }}>
                       {REHABILITATION_TYPE_LABELS[plot.rehabilitation_type] || plot.rehabilitation_type}
                     </span>
 
@@ -340,7 +341,7 @@ export default function ProjectDetailPage() {
           <Card style={{ padding: 0, overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
               <thead>
-                <tr style={{ background: 'var(--bg-surface-elevated)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>
+                <tr style={{ background: 'var(--bg-surface-subtle)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>
                   <th style={{ padding: '0.75rem 1rem' }}>Nama Anggota</th>
                   <th style={{ padding: '0.75rem 1rem' }}>Peran (Role)</th>
                   <th style={{ padding: '0.75rem 1rem' }}>Email</th>

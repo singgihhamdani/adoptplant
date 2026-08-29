@@ -12,7 +12,6 @@ import {
   Settings,
   Sparkles,
 } from 'lucide-react'
-import clsx from 'clsx'
 
 const navItems = [
   { label: 'Overview', href: '/overview', icon: LayoutDashboard },
@@ -31,7 +30,7 @@ export function Sidebar() {
       style={{
         width: '260px',
         minHeight: '100vh',
-        backgroundColor: 'var(--bg-surface)',
+        backgroundColor: '#ffffff',
         borderRight: '1px solid var(--border-subtle)',
         display: 'flex',
         flexDirection: 'column',
@@ -54,18 +53,18 @@ export function Sidebar() {
             width: '36px',
             height: '36px',
             borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(135deg, var(--primary-500), var(--primary-700))',
+            background: 'linear-gradient(135deg, var(--primary-600), var(--primary-800))',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#fff',
-            boxShadow: 'var(--shadow-glow-emerald)',
+            color: '#ffffff',
+            boxShadow: 'var(--shadow-sm)',
           }}
         >
           <Trees size={20} />
         </div>
         <div>
-          <h2 style={{ fontSize: '1.05rem', margin: 0, letterSpacing: '-0.02em' }}>
+          <h2 style={{ fontSize: '1.05rem', margin: 0, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
             REHABTRACK
           </h2>
           <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block' }}>
@@ -92,31 +91,32 @@ export function Sidebar() {
                 borderRadius: 'var(--radius-md)',
                 fontSize: '0.875rem',
                 fontWeight: isActive ? 600 : 500,
-                color: isActive ? 'var(--primary-400)' : 'var(--text-secondary)',
-                backgroundColor: isActive ? 'var(--primary-900)' : 'transparent',
+                color: isActive ? 'var(--primary-700)' : 'var(--text-secondary)',
+                backgroundColor: isActive ? 'var(--primary-50)' : 'transparent',
+                border: isActive ? '1px solid var(--primary-200)' : '1px solid transparent',
                 transition: 'all var(--transition-fast)',
               }}
             >
-              <Icon size={18} style={{ color: isActive ? 'var(--primary-400)' : 'var(--text-muted)' }} />
+              <Icon size={18} style={{ color: isActive ? 'var(--primary-600)' : 'var(--text-muted)' }} />
               {item.label}
             </Link>
           )
         })}
       </nav>
 
-      {/* Pro Indicator Card */}
+      {/* GEE Ready Card */}
       <div style={{ padding: '1rem' }}>
         <div
-          className="glass-panel"
           style={{
             padding: '0.875rem',
-            background: 'linear-gradient(135deg, rgba(6, 78, 59, 0.4), rgba(17, 24, 39, 0.6))',
-            borderColor: 'rgba(16, 185, 129, 0.25)',
+            borderRadius: 'var(--radius-md)',
+            background: 'linear-gradient(135deg, var(--primary-50), #f0fdf4)',
+            border: '1px solid var(--primary-200)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
-            <Sparkles size={14} style={{ color: 'var(--primary-400)' }} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary-300)' }}>
+            <Sparkles size={14} style={{ color: 'var(--primary-600)' }} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary-800)' }}>
               GEE Satellite Ready
             </span>
           </div>

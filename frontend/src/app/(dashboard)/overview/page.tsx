@@ -4,7 +4,6 @@ import React from 'react'
 import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { StatusBadge } from '@/components/ui/badge'
 import {
   Trees,
   MapPin,
@@ -37,21 +36,22 @@ export default function OverviewPage() {
         className="glass-panel"
         style={{
           padding: '1.75rem',
-          background: 'linear-gradient(135deg, rgba(6, 78, 59, 0.45) 0%, rgba(15, 23, 42, 0.85) 100%)',
-          borderColor: 'rgba(16, 185, 129, 0.3)',
+          background: 'linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%)',
+          borderColor: 'var(--primary-200)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '1rem',
+          boxShadow: 'var(--shadow-sm)',
         }}
       >
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary-300)', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.35rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary-700)', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.35rem' }}>
             <ShieldCheck size={16} />
             <span>Sistem Monitoring Lahan Berkelanjutan</span>
           </div>
-          <h1 style={{ fontSize: '1.65rem', marginBottom: '0.25rem', color: '#ffffff' }}>
+          <h1 style={{ fontSize: '1.65rem', marginBottom: '0.25rem', color: 'var(--text-primary)' }}>
             Dashboard Pemantauan Rehabilitasi
           </h1>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', margin: 0, maxWidth: '600px' }}>
@@ -84,7 +84,7 @@ export default function OverviewPage() {
         <Card>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Total Proyek</span>
-            <div style={{ padding: '6px', borderRadius: 'var(--radius-sm)', background: 'var(--primary-900)', color: 'var(--primary-400)' }}>
+            <div style={{ padding: '6px', borderRadius: 'var(--radius-sm)', background: 'var(--primary-50)', color: 'var(--primary-700)' }}>
               <Trees size={16} />
             </div>
           </div>
@@ -97,7 +97,7 @@ export default function OverviewPage() {
         <Card>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Total Luas Lahan</span>
-            <div style={{ padding: '6px', borderRadius: 'var(--radius-sm)', background: 'rgba(6, 182, 212, 0.15)', color: 'var(--accent-cyan)' }}>
+            <div style={{ padding: '6px', borderRadius: 'var(--radius-sm)', background: 'rgba(2, 132, 199, 0.1)', color: 'var(--accent-cyan)' }}>
               <MapPin size={16} />
             </div>
           </div>
@@ -110,7 +110,7 @@ export default function OverviewPage() {
         <Card>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Tanaman Tertanam</span>
-            <div style={{ padding: '6px', borderRadius: 'var(--radius-sm)', background: 'rgba(245, 158, 11, 0.15)', color: 'var(--accent-amber)' }}>
+            <div style={{ padding: '6px', borderRadius: 'var(--radius-sm)', background: 'rgba(217, 119, 6, 0.1)', color: 'var(--accent-amber)' }}>
               <Sprout size={16} />
             </div>
           </div>
@@ -130,7 +130,7 @@ export default function OverviewPage() {
           <div style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.25rem', color: 'var(--status-recovering)' }}>
             {stats.avg_survival_rate}%
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', color: 'var(--primary-400)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', color: 'var(--primary-700)' }}>
             <TrendingUp size={14} />
             <span>+4.2% dari baseline survey</span>
           </div>
@@ -154,7 +154,7 @@ export default function OverviewPage() {
                 <span style={{ color: 'var(--status-recovering)', fontWeight: 600 }}>Pulih (Recovering)</span>
                 <span>{stats.plots_recovering} Plot (62.5%)</span>
               </div>
-              <div style={{ height: '8px', background: 'var(--bg-surface-elevated)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
+              <div style={{ height: '8px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
                 <div style={{ width: '62.5%', height: '100%', background: 'var(--status-recovering)', borderRadius: 'var(--radius-full)' }} />
               </div>
             </div>
@@ -164,7 +164,7 @@ export default function OverviewPage() {
                 <span style={{ color: 'var(--status-monitoring)', fontWeight: 600 }}>Pemantauan (Monitoring)</span>
                 <span>{stats.plots_monitoring} Plot (25.0%)</span>
               </div>
-              <div style={{ height: '8px', background: 'var(--bg-surface-elevated)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
+              <div style={{ height: '8px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
                 <div style={{ width: '25%', height: '100%', background: 'var(--status-monitoring)', borderRadius: 'var(--radius-full)' }} />
               </div>
             </div>
@@ -174,7 +174,7 @@ export default function OverviewPage() {
                 <span style={{ color: 'var(--status-at-risk)', fontWeight: 600 }}>Beresiko (At Risk)</span>
                 <span>{stats.plots_at_risk} Plot (12.5%)</span>
               </div>
-              <div style={{ height: '8px', background: 'var(--bg-surface-elevated)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
+              <div style={{ height: '8px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
                 <div style={{ width: '12.5%', height: '100%', background: 'var(--status-at-risk)', borderRadius: 'var(--radius-full)' }} />
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function OverviewPage() {
                 padding: '0.75rem',
                 borderRadius: 'var(--radius-sm)',
                 background: 'var(--status-at-risk-bg)',
-                border: '1px solid rgba(244, 63, 94, 0.25)',
+                border: '1px solid rgba(225, 29, 72, 0.2)',
                 display: 'flex',
                 gap: '0.75rem',
               }}
@@ -209,7 +209,7 @@ export default function OverviewPage() {
                 padding: '0.75rem',
                 borderRadius: 'var(--radius-sm)',
                 background: 'var(--status-recovering-bg)',
-                border: '1px solid rgba(16, 185, 129, 0.25)',
+                border: '1px solid rgba(5, 150, 105, 0.2)',
                 display: 'flex',
                 gap: '0.75rem',
               }}

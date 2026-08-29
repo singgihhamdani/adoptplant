@@ -63,18 +63,18 @@ export default function RegisterPage() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1.5rem',
-        background: 'radial-gradient(ellipse at top, #064e3b 0%, #090d16 65%)',
+        background: 'radial-gradient(ellipse at top, #ecfdf5 0%, #f8fafc 70%)',
       }}
     >
       <div
-        className="glass-panel"
         style={{
           width: '100%',
           maxWidth: '460px',
-          padding: '2.25rem',
-          backgroundColor: 'rgba(17, 24, 39, 0.85)',
+          padding: '2.5rem 2.25rem',
+          backgroundColor: '#ffffff',
           boxShadow: 'var(--shadow-xl)',
-          border: '1px solid rgba(16, 185, 129, 0.25)',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: 'var(--radius-lg)',
         }}
       >
         {/* Logo & Header */}
@@ -84,18 +84,20 @@ export default function RegisterPage() {
               width: '48px',
               height: '48px',
               borderRadius: 'var(--radius-md)',
-              background: 'linear-gradient(135deg, var(--primary-500), var(--primary-700))',
+              background: 'linear-gradient(135deg, var(--primary-600), var(--primary-800))',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#ffffff',
-              boxShadow: 'var(--shadow-glow-emerald)',
+              boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)',
               marginBottom: '1rem',
             }}
           >
             <Trees size={28} />
           </div>
-          <h1 style={{ fontSize: '1.4rem', marginBottom: '0.35rem' }}>Daftar Akun REHABTRACK</h1>
+          <h1 style={{ fontSize: '1.4rem', marginBottom: '0.35rem', color: 'var(--text-primary)' }}>
+            Daftar Akun REHABTRACK
+          </h1>
           <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>
             Mulai kelola proyek dan dokumentasi pemulihan lahan secara spasial
           </p>
@@ -107,7 +109,7 @@ export default function RegisterPage() {
               padding: '0.75rem',
               borderRadius: 'var(--radius-sm)',
               background: 'var(--status-at-risk-bg)',
-              border: '1px solid rgba(244, 63, 94, 0.3)',
+              border: '1px solid rgba(225, 29, 72, 0.3)',
               color: 'var(--status-at-risk)',
               fontSize: '0.825rem',
               display: 'flex',
@@ -127,7 +129,7 @@ export default function RegisterPage() {
               padding: '0.75rem',
               borderRadius: 'var(--radius-sm)',
               background: 'var(--status-recovering-bg)',
-              border: '1px solid rgba(16, 185, 129, 0.3)',
+              border: '1px solid rgba(5, 150, 105, 0.3)',
               color: 'var(--status-recovering)',
               fontSize: '0.825rem',
               display: 'flex',
@@ -191,7 +193,7 @@ export default function RegisterPage() {
           }}
         >
           Sudah memiliki akun?{' '}
-          <Link href="/login" style={{ color: 'var(--primary-400)', fontWeight: 600 }}>
+          <Link href="/login" style={{ color: 'var(--primary-700)', fontWeight: 600 }}>
             Masuk di sini
           </Link>
         </div>

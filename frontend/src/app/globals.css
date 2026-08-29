@@ -1,46 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  /* Brand Palettes - Nature & Precision */
-  --primary-50: #edfcf2;
-  --primary-100: #d3f8de;
-  --primary-200: #abf0c2;
-  --primary-300: #73e29f;
-  --primary-400: #38cb78;
+  /* Brand Palettes - Emerald Forest & Precision */
+  --primary-50: #ecfdf5;
+  --primary-100: #d1fae5;
+  --primary-200: #a7f3d0;
+  --primary-300: #6ee7b7;
+  --primary-400: #34d399;
   --primary-500: #10b981;
   --primary-600: #059669;
   --primary-700: #047857;
   --primary-800: #065f46;
   --primary-900: #064e3b;
 
-  /* Accent - Bio Emerald & Satellite Cyan */
-  --accent-cyan: #06b6d4;
-  --accent-amber: #f59e0b;
-  --accent-rose: #f43f5e;
-  --accent-indigo: #6366f1;
+  /* Accent Colors */
+  --accent-cyan: #0284c7;
+  --accent-amber: #d97706;
+  --accent-rose: #e11d48;
+  --accent-indigo: #4f46e5;
 
   /* Status Colors */
-  --status-recovering: #10b981;
-  --status-recovering-bg: rgba(16, 185, 129, 0.12);
-  --status-monitoring: #f59e0b;
-  --status-monitoring-bg: rgba(245, 158, 11, 0.12);
-  --status-at-risk: #f43f5e;
-  --status-at-risk-bg: rgba(244, 63, 94, 0.12);
+  --status-recovering: #059669;
+  --status-recovering-bg: #ecfdf5;
+  --status-monitoring: #d97706;
+  --status-monitoring-bg: #fffbeb;
+  --status-at-risk: #e11d48;
+  --status-at-risk-bg: #fff1f2;
 
-  /* Light Theme Surfaces */
+  /* Pure Light Theme Surfaces */
   --bg-app: #f8fafc;
   --bg-surface: #ffffff;
   --bg-surface-elevated: #ffffff;
   --bg-surface-subtle: #f1f5f9;
-  --bg-glass: rgba(255, 255, 255, 0.85);
+  --bg-glass: rgba(255, 255, 255, 0.9);
 
   --border-subtle: #e2e8f0;
   --border-strong: #cbd5e1;
-  --border-focus: #10b981;
+  --border-focus: #059669;
 
   --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
   --text-inverse: #ffffff;
 
   /* Typography */
@@ -55,42 +55,17 @@
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Elevation & Shadows */
+  /* Elevation & Soft Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  --shadow-glow-emerald: 0 0 20px -3px rgba(16, 185, 129, 0.35);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  --shadow-glow-emerald: 0 0 20px -3px rgba(16, 185, 129, 0.25);
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 350ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Sleek Dark Mode (Default / Preferred for Pro GIS feel) */
-[data-theme='dark'],
-.dark {
-  --bg-app: #090d16;
-  --bg-surface: #111827;
-  --bg-surface-elevated: #1f293d;
-  --bg-surface-subtle: #162032;
-  --bg-glass: rgba(17, 24, 39, 0.85);
-
-  --border-subtle: #1f293d;
-  --border-strong: #334155;
-  --border-focus: #34d399;
-
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-inverse: #0f172a;
-
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-  --shadow-glow-emerald: 0 0 25px -2px rgba(16, 185, 129, 0.45);
 }
 
 /* Base Styles */
@@ -142,11 +117,11 @@ h4 { font-size: 1.1rem; line-height: 1.4; }
 p { color: var(--text-secondary); }
 
 a {
-  color: var(--primary-500);
+  color: var(--primary-600);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
-a:hover { color: var(--primary-400); }
+a:hover { color: var(--primary-700); }
 
 /* Common Utility Classes */
 .container {
@@ -192,19 +167,19 @@ a:hover { color: var(--primary-400); }
 .badge-recovering {
   background: var(--status-recovering-bg);
   color: var(--status-recovering);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  border: 1px solid rgba(5, 150, 105, 0.25);
 }
 
 .badge-monitoring {
   background: var(--status-monitoring-bg);
   color: var(--status-monitoring);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  border: 1px solid rgba(217, 119, 6, 0.25);
 }
 
 .badge-at-risk {
   background: var(--status-at-risk-bg);
   color: var(--status-at-risk);
-  border: 1px solid rgba(244, 63, 94, 0.3);
+  border: 1px solid rgba(225, 29, 72, 0.25);
 }
 
 /* Button System */
@@ -225,24 +200,24 @@ a:hover { color: var(--primary-400); }
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
   box-shadow: var(--shadow-glow-emerald);
   transform: translateY(-1px);
 }
 
 .btn-secondary {
-  background: var(--bg-surface-elevated);
+  background: var(--bg-surface);
   border-color: var(--border-strong);
   color: var(--text-primary);
 }
 .btn-secondary:hover {
   background: var(--bg-surface-subtle);
-  border-color: var(--border-focus);
+  border-color: var(--primary-500);
 }
 
 .btn-danger {
@@ -270,14 +245,14 @@ a:hover { color: var(--primary-400); }
 .input-label {
   font-size: 0.825rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .input-control {
   width: 100%;
   padding: 0.625rem 0.875rem;
   background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-family: inherit;

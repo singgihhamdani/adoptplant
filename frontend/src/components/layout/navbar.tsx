@@ -1,8 +1,10 @@
 'use client'
 
 import React from 'react'
-import { Bell, User } from 'lucide-react'
+import { Bell, User, LogOut } from 'lucide-react'
 import { SyncIndicator } from './sync-indicator'
+import { useAuth } from '@/hooks/use-auth'
+import Link from 'next/link'
 
 export interface NavbarProps {
   title?: string
@@ -10,12 +12,14 @@ export interface NavbarProps {
 }
 
 export function Navbar({ title, subtitle }: NavbarProps) {
+  const { user, signOut } = useAuth()
+
   return (
     <header
       style={{
         height: '64px',
         padding: '0 1.75rem',
-        backgroundColor: 'var(--bg-surface)',
+        backgroundColor: '#ffffff',
         borderBottom: '1px solid var(--border-subtle)',
         display: 'flex',
         alignItems: 'center',
@@ -35,48 +39,61 @@ export function Navbar({ title, subtitle }: NavbarProps) {
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <SyncIndicator />
 
-        <button
-          style={{
-            background: 'transparent',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-sm)',
-            padding: '6px',
-            color: 'var(--text-secondary)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          title="Notifications"
-        >
-          <Bell size={16} />
-        </button>
-
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            paddingLeft: '0.5rem',
-            borderLeft: '1px solid var(--border-subtle)',
-          }}
-        >
+        {user ? (
           <div
             style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--bg-surface-elevated)',
-              border: '1px solid var(--border-strong)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--text-secondary)',
+              gap: '0.75rem',
+              paddingLeft: '0.75rem',
+              borderLeft: '1px solid var(--border-subtle)',
             }}
           >
-            <User size={16} />
+            <div style={{ textAlign: 'right' }}>
+              <span style={{ fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-primary)', display: 'block', lineHeight: 1.2 }}>
+                {user.name}
+              </span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--primary-700)', fontWeight: 500 }}>
+                {user.role}
+              </span>
+            </div>
+
+            <button
+              onClick={() => signOut()}
+              style={{
+                background: 'var(--bg-surface-subtle)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '6px 8px',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '0.75rem',
+              }}
+              title="Keluar / Logout"
+            >
+              <LogOut size={14} />
+              <span>Keluar</span>
+            </button>
           </div>
-        </div>
+        ) : (
+          <Link
+            href="/login"
+            style={{
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              color: 'var(--primary-700)',
+              padding: '0.35rem 0.75rem',
+              borderRadius: 'var(--radius-sm)',
+              background: 'var(--primary-50)',
+              border: '1px solid var(--primary-200)',
+            }}
+          >
+            Masuk Akun
+          </Link>
+        )}
       </div>
     </header>
   )
