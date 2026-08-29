@@ -1,0 +1,16 @@
+{
+  "name": "REHABTRACK — Monitoring Lahan",
+  "short_name": "REHABTRACK",
+  "description": "Dari aksi penanaman menuju bukti pemulihan.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
