@@ -34,6 +34,16 @@ REHABTRACK adalah platform untuk memantau dan mengevaluasi keberhasilan rehabili
 
 REHABTRACK **tidak** berfokus pada pencatatan jumlah pohon yang ditanam. Fokus utamanya adalah **evidence of recovery**.
 
+### Wilayah Pilot & Implementasi Awal: Kabupaten Banjarnegara
+Pada tahap awal, implementasi dan validasi platform REHABTRACK difokuskan pada **Kabupaten Banjarnegara, Jawa Tengah**.
+- **Karakteristik Wilayah:** Kawasan hulu DAS Serayu dengan topografi berbukit/pegunungan, kerentanan longsor, hutan rakyat, dan agroforestri.
+- **Dukungan Batas Administrasi & Data Tematik Kebencanaan Lokal:**
+  - Batas Administrasi (`data/map/BOUNDARY/` - 20 Kecamatan & 278 Desa/Kelurahan)
+  - Pola Ruang / RTRW (`data/map/POLA RUANG V2/` - 14 Zonasi Tata Ruang Wilayah)
+  - Kerawanan & Riwayat Kejadian Bencana BPBD (`data/map/KELAS DAN INDEKS BENCANA/` - Peta Bahaya Longsor & 244 Titik Riwayat)
+  - Dampak Bencana Dasimetrik (`data/databaru/dataimpact/` - Estimasi Penduduk Terpapar Bahaya Longsor 374k Jiwa & Banjir)
+- **Fungsi Analisis Spasial Kontekstual:** Sebagai layer overlay analitis untuk memvalidasi legalitas tata ruang, memprioritaskan penanaman pohon pengikat tanah di zona merah lereng kritis, serta mengukur dampak proteksi penduduk sekitar (*Ecosystem-based Disaster Risk Reduction / Eco-DRR*).
+
 ---
 
 ## 2. Latar Belakang

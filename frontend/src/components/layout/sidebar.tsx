@@ -16,6 +16,7 @@ import {
 const navItems = [
   { label: 'Overview', href: '/overview', icon: LayoutDashboard },
   { label: 'Projects', href: '/projects', icon: Trees },
+  { label: 'Peta Spasial', href: '/map', icon: MapPin },
   { label: 'Plots', href: '/plots', icon: MapPin },
   { label: 'Field Monitoring', href: '/monitoring', icon: ClipboardCheck },
   { label: 'Timeline & Events', href: '/timeline', icon: History },

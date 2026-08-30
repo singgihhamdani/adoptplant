@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panduan Plugin Analisis Dasimetrik Penduduk</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+:root{--primary:#1e3a8a;--blue:#3b82f6;--green:#10b981;--yellow:#f59e0b;--red:#ef4444;--bg:#f1f5f9;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--dark:#0f172a;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+.hero{background:linear-gradient(135deg,#1e3a8a,#1d4ed8);color:#fff;padding:60px 40px;text-align:center;}
+.hero h1{font-size:2.4rem;font-weight:700;margin-bottom:14px;}
+.hero p{font-size:1.05rem;opacity:.85;max-width:580px;margin:0 auto 24px;}
+.hero-meta{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;opacity:.75;font-size:13px;}
+nav{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:99;box-shadow:0 1px 6px rgba(0,0,0,.06);}
+nav ul{display:flex;list-style:none;padding:0 32px;overflow-x:auto;}
+nav a{display:block;padding:14px 18px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;}
+nav a:hover{color:var(--blue);border-bottom-color:var(--blue);}
+.wrap{max-width:960px;margin:0 auto;padding:40px 20px;}
+.sec{margin-bottom:56px;}
+.sec-title{font-size:1.6rem;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.sec-sub{color:var(--muted);margin-bottom:24px;font-size:14px;}
+.card{background:#fff;border-radius:12px;padding:24px;border:1px solid var(--border);margin-bottom:16px;}
+.card h3{font-size:1rem;font-weight:600;color:var(--primary);margin-bottom:10px;}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.formula{background:var(--dark);border-radius:10px;padding:24px;margin:18px 0;border-left:4px solid var(--blue);font-family:monospace;}
+.formula .lbl{color:#475569;font-size:12px;margin-bottom:8px;}
+.formula .expr{color:#e2e8f0;font-size:1.05rem;}
+.formula .expr .a{color:#60a5fa;}.formula .expr .b{color:#34d399;}.formula .expr .c{color:#f59e0b;}
+.formula ul{margin-top:12px;list-style:none;}
+.formula ul li{color:#94a3b8;font-size:12px;font-family:monospace;margin-bottom:3px;}
+.step-wrap{}
+.step{display:flex;gap:18px;margin-bottom:28px;position:relative;}
+.step:not(:last-child)::after{content:'';position:absolute;left:20px;top:48px;bottom:-8px;width:2px;background:linear-gradient(to bottom,var(--blue),transparent);}
+.step-n{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--blue));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;box-shadow:0 4px 10px rgba(59,130,246,.3);}
+.step-c h4{font-size:.95rem;font-weight:600;margin-bottom:4px;}
+.step-c p{color:var(--muted);font-size:13px;}
+.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;}
+.mcard{border-radius:12px;padding:20px;border:2px solid;}
+.mcard.area{border-color:var(--blue);background:linear-gradient(135deg,#eff6ff,#dbeafe);}
+.mcard.count{border-color:var(--green);background:linear-gradient(135deg,#f0fdf4,#dcfce7);}
+.mcard h4{font-size:.95rem;font-weight:700;margin-bottom:10px;}
+.mcard.area h4{color:#1d4ed8;}.mcard.count h4{color:#059669;}
+.mcard ul{list-style:none;}
+.mcard ul li{font-size:12px;color:#334155;margin-bottom:5px;padding-left:18px;position:relative;}
+.mcard ul li::before{content:'→';position:absolute;left:0;color:var(--muted);}
+.illus{background:var(--dark);border-radius:10px;padding:20px;font-family:monospace;font-size:12.5px;color:#94a3b8;margin:16px 0;overflow-x:auto;white-space:pre;}
+.illus .hl{color:#60a5fa;font-weight:700;}.illus .hm{color:#34d399;}.illus .cm{color:#475569;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--primary);color:#fff;padding:11px 14px;text-align:left;font-weight:600;}
+td{padding:11px 14px;border-bottom:1px solid var(--border);}
+tr:nth-child(even) td{background:#f8fafc;}
+.tag{display:inline-block;padding:2px 9px;border-radius:50px;font-size:10px;font-weight:700;}
+.req{background:#fee2e2;color:#991b1b;}.opt{background:#fef3c7;color:#92400e;}
+.alert{border-radius:10px;padding:15px 18px;margin:18px 0;display:flex;gap:12px;align-items:flex-start;font-size:13px;}
+.at{font-size:18px;flex-shrink:0;}
+.a-warn{background:#fffbeb;border:1px solid #fcd34d;}
+.a-tip{background:#f0fdf4;border:1px solid #86efac;}
+.a-info{background:#eff6ff;border:1px solid #93c5fd;}
+.alert strong{display:block;margin-bottom:3px;}
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0;}
+.cc{border-radius:10px;padding:18px;}
+.cc.soft{background:#f0fdf4;border:2px solid #86efac;}
+.cc.hard{background:#fef2f2;border:2px solid #fca5a5;}
+.cc h4{font-weight:700;margin-bottom:8px;}
+.cc.soft h4{color:#059669;}.cc.hard h4{color:#dc2626;}
+.cc p{font-size:12px;color:#475569;}
+.out-list{display:flex;flex-direction:column;gap:10px;}
+.out-item{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;background:#fff;border-radius:10px;border:1px solid var(--border);}
+.oic{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.oic.tif{background:#dbeafe;}.oic.csv{background:#dcfce7;}.oic.htm{background:#fce7f3;}.oic.shp{background:#fef3c7;}
+.out-item strong{display:block;font-size:13px;color:var(--dark);margin-bottom:2px;}
+.out-item p{font-size:11px;color:var(--muted);}
+.vrow{display:flex;align-items:center;gap:12px;padding:13px 18px;border-radius:10px;margin-bottom:8px;font-size:13px;}
+.vrow.g{background:#f0fdf4;border:1px solid #86efac;}
+.vrow.w{background:#fffbeb;border:1px solid #fcd34d;}
+.vrow.b{background:#fef2f2;border:1px solid #fca5a5;}
+.vb{padding:3px 11px;border-radius:50px;font-size:11px;font-weight:700;flex-shrink:0;}
+.vrow.g .vb{background:#dcfce7;color:#15803d;}.vrow.w .vb{background:#fef3c7;color:#b45309;}.vrow.b .vb{background:#fee2e2;color:#b91c1c;}
+details{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+summary{padding:14px 18px;font-weight:500;cursor:pointer;background:#fff;list-style:none;user-select:none;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:'+';float:right;font-size:18px;color:var(--muted);}
+details[open] summary::after{content:'-';}
+details[open] summary{border-bottom:1px solid var(--border);}
+.fb{padding:18px;background:#f8fafc;font-size:13px;color:var(--muted);line-height:1.8;}
+code{background:#e2e8f0;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:12px;}
+footer{background:var(--dark);color:#94a3b8;text-align:center;padding:36px;font-size:13px;}
+footer strong{color:#fff;}
+@media(max-width:640px){.hero h1{font-size:1.6rem;}.method-grid,.cap-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="hero">
+<div style="display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:5px 15px;border-radius:50px;font-size:12px;margin-bottom:16px;">&#128218; Dokumentasi Resmi Plugin</div>
+<h1>&#128506;&#65039; Analisis Dasimetrik Penduduk</h1>
+<p>Plugin QGIS untuk mendistribusikan data penduduk dari skala desa ke skala piksel 30x30 m berdasarkan kepadatan bangunan.</p>
+<div class="hero-meta"><span>&#9881;&#65039; QGIS 3.x</span><span>&#128013; Python 3.12</span><span>&#128230; GDAL / NumPy</span><span>&#9997;&#65039; Faisal Fadhilah</span></div>
+</div>
+<nav><ul>
+<li><a href="#konsep">Konsep Dasar</a></li>
+<li><a href="#persiapan">Persiapan Data</a></li>
+<li><a href="#parameter">Parameter Input</a></li>
+<li><a href="#metode">Metode Kalkulasi</a></li>
+<li><a href="#alur">Alur Proses</a></li>
+<li><a href="#output">Output</a></li>
+<li><a href="#validasi">Validasi</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ul></nav>
+<div class="wrap">
+
+<section class="sec" id="konsep">
+<h2 class="sec-title">&#128161; Konsep Dasar</h2>
+<p class="sec-sub">Apa itu Analisis Dasimetrik dan bagaimana cara kerjanya?</p>
+<div class="card"><p>Analisis <strong>Dasimetrik (Dasymetric Mapping)</strong> adalah metode yang memindahkan data statistik (populasi) dari unit administratif besar (desa/kelurahan) ke unit yang lebih kecil (piksel raster), menggunakan <strong>data pendukung</strong> seperti lokasi dan kepadatan bangunan.</p><br><p>Asumsi utama: <strong>di mana ada bangunan, di situ ada penduduk</strong>. Piksel yang memiliki lebih banyak bangunan mendapat porsi penduduk yang lebih besar.</p></div>
+<div class="formula">
+<div class="lbl">// Formula Inti Kalkulasi Dasimetrik</div>
+<div class="expr">Penduduk_Pixel = (<span class="a">A</span> / (<span class="b">B</span> + 0.00001)) x <span class="c">C</span></div>
+<ul>
+<li>// <span style="color:#60a5fa">A</span> = Bobot Bangunan di Piksel (Luas atau Jumlah)</li>
+<li>// <span style="color:#34d399">B</span> = Total Bobot Bangunan di seluruh Desa (SUM)</li>
+<li>// <span style="color:#f59e0b">C</span> = Jumlah Penduduk Desa dari data CSV</li>
+<li>// + 0.00001 &gt; mencegah pembagian dengan nol</li>
+</ul>
+</div>
+</section>
+
+<section class="sec" id="persiapan">
+<h2 class="sec-title">&#128194; Persiapan Data</h2>
+<p class="sec-sub">Data yang diperlukan sebelum menjalankan plugin.</p>
+<div class="grid2">
+<div class="card"><h3>&#128506;&#65039; SHP Administrasi Desa</h3><p>Poligon batas administrasi desa/kelurahan. Harus memiliki field ID unik dan harus dalam <strong>Projected CRS</strong> (bukan WGS84 geografis). Disarankan UTM.</p></div>
+<div class="card"><h3>&#128202; CSV Jumlah Penduduk</h3><p>File CSV dengan minimal 2 kolom: <strong>ID Zona</strong> (harus identik dengan ID di SHP) dan <strong>Jumlah Penduduk</strong>.</p></div>
+<div class="card"><h3>&#127968; SHP Open Building</h3><p>Poligon footprint bangunan. Bisa dari <em>Google Open Buildings</em> (via plugin GEE) atau sumber lain. CRS harus sama dengan SHP Administrasi.</p></div>
+<div class="card"><h3>&#127758; SHP Area Permukiman</h3><p>Poligon area permukiman. Untuk mem-filter bangunan agar bangunan industri/pabrik tidak ikut dihitung dalam distribusi.</p></div>
+</div>
+<div class="alert a-warn"><span class="at">&#9888;&#65039;</span><div><strong>Penting: Sistem Koordinat (CRS)</strong>Semua layer input <strong>wajib</strong> berada dalam CRS yang sama dan harus berupa <strong>Projected CRS</strong> (mis. UTM WGS 84 Zone 48S / EPSG:32748). Menggunakan CRS geografis (EPSG:4326) akan menyebabkan perhitungan luas yang tidak akurat.</div></div>
+</section>
+
+<section class="sec" id="parameter">
+<h2 class="sec-title">&#9881;&#65039; Parameter Input</h2>
+<p class="sec-sub">Penjelasan setiap parameter yang tersedia di antarmuka QGIS Processing.</p>
+<div class="card" style="overflow-x:auto">
+<table>
+<thead><tr><th>Parameter</th><th>Tipe</th><th>Status</th><th>Keterangan</th></tr></thead>
+<tbody>
+<tr><td><strong>SHP Administrasi Desa</strong></td><td>Vektor Polygon</td><td><span class="tag req">Wajib</span></td><td>Layer batas administrasi desa/kelurahan</td></tr>
+<tr><td><strong>File CSV Jumlah Penduduk</strong></td><td>Table/CSV</td><td><span class="tag req">Wajib</span></td><td>Muat ke QGIS dulu sebagai Delimited Text Layer</td></tr>
+<tr><td><strong>Field ID Zona di SHP</strong></td><td>Field</td><td><span class="tag req">Wajib</span></td><td>Field ID unik di SHP Administrasi untuk join ke CSV</td></tr>
+<tr><td><strong>Field Nama Desa</strong></td><td>Field</td><td><span class="tag opt">Opsional</span></td><td>Untuk laporan validasi. Jika kosong, diisi "-"</td></tr>
+<tr><td><strong>Field Nama Kecamatan</strong></td><td>Field</td><td><span class="tag opt">Opsional</span></td><td>Untuk laporan validasi. Jika kosong, diisi "-"</td></tr>
+<tr><td><strong>Field ID di CSV</strong></td><td>Field</td><td><span class="tag req">Wajib</span></td><td>Field ID di CSV yang cocok dengan ID di SHP</td></tr>
+<tr><td><strong>Field Jumlah Penduduk di CSV</strong></td><td>Field Numerik</td><td><span class="tag req">Wajib</span></td><td>Field yang berisi angka jumlah penduduk per desa</td></tr>
+<tr><td><strong>SHP Open Building</strong></td><td>Vektor Polygon</td><td><span class="tag req">Wajib</span></td><td>Footprint bangunan (poligon)</td></tr>
+<tr><td><strong>SHP Area Permukiman</strong></td><td>Vektor Polygon</td><td><span class="tag req">Wajib</span></td><td>Masker area permukiman untuk filter bangunan non-hunian</td></tr>
+<tr><td><strong>Metode Kalkulasi</strong></td><td>Pilihan</td><td><span class="tag req">Wajib</span></td><td>Pilih: <em>Luas Bangunan</em> atau <em>Jumlah Bangunan</em></td></tr>
+<tr><td><strong>Ukuran Piksel (meter)</strong></td><td>Angka</td><td><span class="tag req">Wajib</span></td><td>Resolusi output raster. Default: 30m (Landsat)</td></tr>
+<tr><td><strong>Batas Maks Penduduk/Piksel</strong></td><td>Angka</td><td><span class="tag opt">Opsional</span></td><td>Isi 0 jika tidak dibatasi. Jika diisi, aktifkan Water-filling</td></tr>
+<tr><td><strong>Metode Batasan (Cap)</strong></td><td>Pilihan</td><td><span class="tag opt">Opsional</span></td><td>Soft Cap (aman) atau Hard Cap (berisiko)</td></tr>
+<tr><td><strong>Folder Output</strong></td><td>Folder</td><td><span class="tag req">Wajib</span></td><td>Direktori penyimpanan semua file output</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="sec" id="metode">
+<h2 class="sec-title">&#9878;&#65039; Metode Kalkulasi</h2>
+<p class="sec-sub">Dua pilihan pembobotan dan kapan sebaiknya digunakan.</p>
+<div class="method-grid">
+<div class="mcard area"><h4>&#128208; Metode 1: Luas Bangunan (Default)</h4><ul><li>Bobot = akar(min(luas_bangunan, luas_piksel))</li><li>Bangunan lebih luas = bobot lebih besar</li><li>Normalisasi Sqrt cegah gedung raksasa dominasi</li><li>Cocok untuk area campuran hunian dan komersial</li><li>Lebih sensitif terhadap perbedaan ukuran bangunan</li></ul></div>
+<div class="mcard count"><h4>&#127968; Metode 2: Jumlah Bangunan</h4><ul><li>Bobot = jumlah centroid bangunan per piksel</li><li>1 rumah = 1 suara (tidak peduli ukurannya)</li><li>1 piksel 30x30m bisa berisi 0, 1, 2, 3+ bangunan</li><li>Menggunakan Python/NumPy bincount (akurat)</li><li>Lebih adil untuk area permukiman padat</li></ul></div>
+</div>
+<div class="card"><h3>&#128202; Ilustrasi: 1 Piksel Bisa Berisi Lebih dari 1 Bangunan</h3>
+<div class="illus">  +------------------------------------------------+
+  |    AREA DESA  (Total: 500 jiwa)               |
+  |                                               |
+  |  +----------+----------+----------+--------+  |
+  |  |          |  <span class="hm">HH  HH</span>  |          | <span class="hm">HHH HHH</span> |  |
+  |  | <span class="hl">Count=0</span>  | <span class="hl">Count=2</span>  | <span class="hl">Count=0</span>  | <span class="hl">Count=3</span>|  |
+  |  |  0 jiwa  | 100 jiwa |  0 jiwa  | 150 j  |  |
+  |  +----------+----------+----------+--------+  |
+  |  |   <span class="hm">H</span>      |          |  <span class="hm">HHHH</span>   |        |  |
+  |  | <span class="hl">Count=1</span>  | <span class="hl">Count=0</span>  | <span class="hl">Count=4</span>  | <span class="hl">Count=0</span>|  |
+  |  |  50 jiwa |  0 jiwa  | 200 jiwa |  0 j   |  |
+  |  +----------+----------+----------+--------+  |
+  |                                               |
+  | <span class="cm">Total Rumah = 0+2+0+3+1+0+4+0 = 10 bangunan</span>   |
+  | <span class="cm">Total Terdistribusi = 500 jiwa (100% akurat)</span>  |
+  +------------------------------------------------+</div></div>
+<div class="alert a-tip"><span class="at">&#128161;</span><div><strong>Rekomendasi:</strong> Gunakan <strong>Metode Luas</strong> jika variasi ukuran bangunan signifikan. Gunakan <strong>Metode Jumlah</strong> jika setiap unit hunian ingin diperlakukan setara (area permukiman padat dan homogen).</div></div>
+</section>
+
+<section class="sec" id="alur">
+<h2 class="sec-title">&#128260; Alur Proses</h2>
+<p class="sec-sub">Langkah-langkah yang dijalankan algoritma secara otomatis.</p>
+<div class="step-wrap">
+<div class="step"><div class="step-n">1</div><div class="step-c"><h4>Join CSV ke SHP Administrasi</h4><p>Data penduduk digabungkan ke atribut tiap poligon desa berdasarkan kecocokan field ID. Desa yang tidak cocok nilainya NULL.</p></div></div>
+<div class="step"><div class="step-n">2</div><div class="step-c"><h4>Rasterisasi Administrasi Desa</h4><p>SHP Administrasi diubah menjadi: <strong>ID_Zone_Desa.tif</strong> (setiap piksel = ID desa) dan <strong>Jumlah_Penduduk.tif</strong> (setiap piksel = jiwa desa, nilai C).</p></div></div>
+<div class="step"><div class="step-n">3</div><div class="step-c"><h4>Filter Bangunan berdasarkan Area Permukiman</h4><p>Hanya bangunan yang berada di dalam area permukiman yang diproses. Bangunan pabrik/gudang di luar permukiman dibuang.</p></div></div>
+<div class="step"><div class="step-n">4</div><div class="step-c"><h4>Kalkulasi Bobot (A) — sesuai metode pilihan</h4><p><strong>Metode Luas:</strong> Hitung luas tiap bangunan + normalisasi sqrt.<br><strong>Metode Jumlah:</strong> Konversi ke centroid, hitung jumlah centroid per piksel via NumPy bincount, tulis ke GeoTIFF via GDAL Python.</p></div></div>
+<div class="step"><div class="step-n">5</div><div class="step-c"><h4>Total Bobot per Desa (B) — Zonal Statistics</h4><p>Menghitung SUM raster bobot (A) per zona desa. Nilai B dikembalikan ke raster, nilainya konstan per desa.</p></div></div>
+<div class="step"><div class="step-n">6</div><div class="step-c"><h4>Kalkulasi Dasimetrik — Raster Calculator</h4><p>Formula: <code>(A / (B + 0.00001)) x C</code>. Piksel dengan bangunan dapat porsi penduduk proporsional. Piksel kosong = 0 jiwa.</p></div></div>
+<div class="step"><div class="step-n">7</div><div class="step-c"><h4>Redistribusi Opsional — Water-filling Algorithm</h4><p>Jika batas maks/piksel diaktifkan, kelebihan penduduk di piksel padat dibagi ulang ke piksel lain dalam desa yang sama (Soft/Hard Cap).</p></div></div>
+<div class="step"><div class="step-n">8</div><div class="step-c"><h4>Validasi dan Pembuatan Laporan</h4><p>Membandingkan total penduduk piksel vs data CSV asli. Menghasilkan laporan validasi HTML + CSV.</p></div></div>
+</div>
+<h3 style="margin:28px 0 14px;font-size:1.1rem;color:var(--primary)">&#128274; Metode Batasan (Cap Method)</h3>
+<div class="cap-grid">
+<div class="cc soft"><h4>&#10003; Soft Cap (Disarankan)</h4><p>Jika kapasitas bangunan di suatu desa tidak cukup, algoritma otomatis <strong>menaikkan batas</strong> khusus untuk desa tersebut. Tidak ada penduduk yang hilang. Validasi selalu 100% akurat.</p></div>
+<div class="cc hard"><h4>&#10005; Hard Cap (Berisiko)</h4><p>Batas dikunci absolut. Sisa penduduk yang tidak muat akan <strong>dibuang/hilang</strong>. Validasi akan menunjukkan selisih besar. Gunakan hanya untuk eksperimen.</p></div>
+</div>
+</section>
+
+<section class="sec" id="output">
+<h2 class="sec-title">&#128230; File Output</h2>
+<p class="sec-sub">Semua file yang dihasilkan dan tersimpan di Folder Output yang Anda pilih.</p>
+<div class="out-list">
+<div class="out-item"><div class="oic tif">&#128506;</div><div><strong>ID_Zone_Desa.tif</strong><p>Raster zona administrasi desa. Setiap piksel = nilai ID desa. Referensi zona untuk analisis lanjutan.</p></div></div>
+<div class="out-item"><div class="oic tif">&#128101;</div><div><strong>Jumlah_Penduduk.tif</strong><p>Raster nilai penduduk flat per desa (nilai C). Semua piksel dalam 1 desa memiliki nilai yang sama.</p></div></div>
+<div class="out-item"><div class="oic tif">&#127968;</div><div><strong>Building_Density_Ras.tif</strong><p>Raster bobot bangunan per piksel (nilai A). Metode Luas: nilai sqrt-luas. Metode Jumlah: jumlah bangunan. Piksel kosong = 0.</p></div></div>
+<div class="out-item"><div class="oic tif">&#128202;</div><div><strong>Building_Density_Total_Zone.tif</strong><p>Raster total bobot bangunan per zona desa (nilai B). Nilainya konstan per desa.</p></div></div>
+<div class="out-item"><div class="oic shp">&#11088;</div><div><strong>Distribusi_Penduduk_Grid.shp  UTAMA</strong><p>Shapefile grid vektor distribusi penduduk per piksel. Setiap fitur = 1 piksel. Berguna untuk analisis spasial lanjutan.</p></div></div>
+<div class="out-item"><div class="oic tif">&#11088;</div><div><strong>Distribusi_Penduduk.tif  UTAMA</strong><p>Raster hasil akhir distribusi penduduk. Setiap piksel = estimasi jiwa dalam area 30x30m. Ini adalah OUTPUT UTAMA untuk analisis selanjutnya.</p></div></div>
+<div class="out-item"><div class="oic csv">&#128203;</div><div><strong>Validasi_Penduduk.csv</strong><p>Tabel validasi per desa: Kecamatan, Desa, Populasi Asli (CSV), Populasi Kalkulasi, Selisih, Kategori Kelayakan.</p></div></div>
+<div class="out-item"><div class="oic htm">&#127760;</div><div><strong>Laporan_Validitas.html</strong><p>Dashboard laporan interaktif. Berisi insight analisis, rata-rata margin error, dan ringkasan kelayakan. Buka di browser.</p></div></div>
+</div>
+</section>
+
+<section class="sec" id="validasi">
+<h2 class="sec-title">&#10003; Membaca Hasil Validasi</h2>
+<p class="sec-sub">Cara menginterpretasikan laporan validasi yang dihasilkan.</p>
+<div class="vrow g"><span class="vb">&#10003; Optimal</span><div><strong>Selisih &le; 1%</strong> &mdash; Distribusi sangat akurat. Kehilangan data akibat efek tepi grid sangat minim. Model sangat valid untuk analisis lanjutan.</div></div>
+<div class="vrow w"><span class="vb">&#9888; Wajar</span><div><strong>Selisih 1% &ndash; 5%</strong> &mdash; Penyimpangan dalam batas toleransi. Umum terjadi karena efek pemotongan poligon desa oleh grid (edge effect). Data masih andal.</div></div>
+<div class="vrow b"><span class="vb">&#10007; Periksa</span><div><strong>Selisih &gt; 5%</strong> &mdash; Penyimpangan melebihi batas wajar. Kemungkinan: (1) Desa tanpa bangunan di area permukiman, (2) CRS tidak selaras, (3) Hard Cap dengan kapasitas kurang, (4) Join CSV gagal.</div></div>
+<div class="alert a-info"><span class="at">&#8505;&#65039;</span><div><strong>Tentang Desa Selisih 100%:</strong>Artinya desa tersebut memiliki data penduduk di CSV tetapi <strong>tidak ada bangunan</strong> yang terdeteksi di dalam area permukiman. Periksa apakah SHP Bangunan dan SHP Permukiman mencakup desa tersebut.</div></div>
+</section>
+
+<section class="sec" id="faq">
+<h2 class="sec-title">&#10067; Pertanyaan Umum (FAQ)</h2>
+<p class="sec-sub">Jawaban untuk pertanyaan yang sering diajukan.</p>
+<details><summary>&#128308; Error: NameError 'QgsProcessingParameterEnum' is not defined</summary><div class="fb">Import tidak lengkap. Pastikan <code>QgsProcessingParameterEnum</code> sudah ada di bagian import di baris awal file <code>DASSYMETRIC RASTER.py</code>. File yang sudah diperbaiki seharusnya sudah mengatasi ini.</div></details>
+<details><summary>&#128308; Error: module 'ee' has no attribute 'Authenticate'</summary><div class="fb">Ada dua package Python bernama <code>ee</code>. Package yang salah ter-install. Solusi: buka Python Console QGIS dan jalankan:<br><br><code>import subprocess, sys<br>subprocess.run([sys.executable, "-m", "pip", "uninstall", "ee", "-y"])<br>subprocess.run([sys.executable, "-m", "pip", "install", "earthengine-api", "--upgrade"])</code><br><br>Kemudian restart QGIS.</div></details>
+<details><summary>&#9888;&#65039; Hasil Distribusi_Penduduk.tif bernilai 0 semua (High:0, Low:0)</summary><div class="fb">Kemungkinan penyebab:<br>1. <strong>Metode Jumlah Bangunan versi lama</strong> &mdash; Bug pada grid+rasterize sudah diperbaiki dengan Python/NumPy langsung.<br>2. <strong>CRS tidak sama</strong> &mdash; Pastikan semua layer dalam CRS yang identik.<br>3. <strong>SHP Bangunan tidak tumpang tindih dengan SHP Permukiman</strong> &mdash; Setelah filter, tidak ada bangunan yang tersisa.</div></details>
+<details><summary>&#9888;&#65039; Pesan "No spatial index exists for input layer"</summary><div class="fb">Ini hanya peringatan performa, bukan error. Proses tetap berjalan tetapi lebih lambat. Tidak mempengaruhi keakuratan hasil.</div></details>
+<details><summary>&#10067; Berapa ukuran piksel yang sebaiknya digunakan?</summary><div class="fb">Default 30m cocok untuk data citra Landsat dan Google Open Buildings. Jika ingin resolusi lebih tinggi (mis. 10m), proses akan lebih lambat dan output lebih besar. Pastikan data bangunan juga cukup detail untuk skala tersebut.</div></details>
+<details><summary>&#10067; Apa perbedaan Soft Cap dan Hard Cap?</summary><div class="fb"><strong>Soft Cap:</strong> Jika kapasitas bangunan tidak cukup, algoritma otomatis menaikkan batas untuk desa itu. Tidak ada data yang hilang.<br><br><strong>Hard Cap:</strong> Batas mutlak tidak bisa dinaikkan. Sisa penduduk yang tidak muat akan dibuang. Gunakan hanya untuk eksperimen.</div></details>
+<details><summary>&#10067; Plugin GEE tidak muncul setelah error. Bagaimana cara memulihkannya?</summary><div class="fb">1. Perbaiki library <code>ee</code> terlebih dahulu (lihat FAQ di atas).<br>2. Restart QGIS.<br>3. Buka Plugins &rarr; Manage and Install Plugins &rarr; Installed.<br>4. Cari Google Earth Engine plugin dan centang kembali.<br>5. Tutup jendela. Plugin akan muncul kembali.</div></details>
+<details><summary>&#10067; Mengapa 1 piksel bisa berisi lebih dari 1 bangunan?</summary><div class="fb">Piksel 30x30m = 900 m2. Rumah kecil bisa hanya 36 m2 (6x6m). Artinya bisa ada hingga 25 rumah kecil dalam 1 piksel.<br><br>Pada Metode Jumlah Bangunan, centroid (titik pusat) setiap bangunan dihitung. Jika 3 centroid jatuh dalam 1 piksel yang sama, nilai bobot piksel = 3. Ini perilaku yang benar dan mencerminkan kepadatan permukiman sebenarnya.</div></details>
+</section>
+
+</div>
+<footer><p style="font-size:1.4rem;margin-bottom:10px">&#128506;&#65039;</p><p><strong>Plugin Analisis Dasimetrik Penduduk</strong></p><p style="margin:8px 0">Authored by <strong>Faisal Fadhilah</strong> | QGIS 3.38.1-Grenoble</p><p style="margin-top:14px;font-size:11px;opacity:.6">Panduan ini dibuat untuk membantu pengguna memahami cara kerja dan penggunaan plugin secara optimal.</p></footer>
+</body>
+</html>

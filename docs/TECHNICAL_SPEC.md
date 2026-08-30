@@ -553,4 +553,29 @@ CORS_ORIGINS=http://localhost:3000,https://rehabtrack.id
 
 ---
 
+## 13. Spatial Reference & Regional Pilot Focus (Kabupaten Banjarnegara)
+
+### Wilayah Pilot & Bounding Box
+- **Wilayah Implementasi Awal:** Kabupaten Banjarnegara, Provinsi Jawa Tengah, Indonesia.
+- **Default Spatial Extent:**
+  - Center: `[109.698, -7.397]` (MapLibre `[lng, lat]`)
+  - Zoom: Default `11` (BBox: Lon `109.45` s/d `109.95`, Lat `-7.55` s/d `-7.20`)
+  - Projection: WGS 84 / EPSG:4326
+
+### Batas Administrasi & Layer Kontekstual Tematik Spasial
+- **Sumber Data Geografis:**
+  1. Batas Administrasi (`data/map/BOUNDARY/`): 20 Kecamatan & 278 Desa/Kelurahan.
+  2. Pola Ruang / RTRW (`data/map/POLA RUANG V2/`): 14 zonasi tata ruang resmi (direproyeksi ke EPSG:4326).
+  3. Kerawanan & Riwayat Longsor (`data/map/KELAS DAN INDEKS BENCANA/`): Peta Bahaya & 244 Titik Riwayat Longsor BPBD (2022–2026).
+  4. Dampak Bencana Dasimetrik (`data/databaru/dataimpact/`):
+     - `dasimetrik-longsor.geojson`: 7.747 poligon bahaya longsor dengan atribut `JML_JIWA` (populasi penduduk terpapar) & `KLS_BENC`.
+     - `dasimetrik-banjir.geojson`: 591 poligon bahaya genangan banjir.
+- **Implementasi Frontend (`frontend/public/data/`):**
+  - **Engine:** Leaflet & MapLibre GL JS dengan native SVG vector rendering.
+  - **Mekanisme Pemuatan:** *Lazy-Loading On-Demand* via UI Layer Control sehingga aset tematik hanya diunduh saat layer diaktifkan oleh pengguna.
+  - **Analisis Dampak Sosial (Eco-DRR):** Menghitung estimasi jumlah penduduk pemukiman yang dilindungi oleh restorasi vegetasi pohon di lereng kritis hulu.
+
+---
+
 *END OF TECHNICAL SPECIFICATION*
+

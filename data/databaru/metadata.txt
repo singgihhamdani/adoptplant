@@ -1,0 +1,12 @@
+[general]
+name=NTLs_Pop_Distribution
+qgisMinimumVersion=3.0
+description=Plugin untuk instalasi dependency dan analisis dasimetrik distribusi penduduk.
+version=1.0
+author=Faisal Fadhilah
+email=admin@example.com
+about=Paket plugin lengkap untuk analisis dasimetrik penduduk
+tracker=
+repository=
+category=Processing
+hasProcessingProvider=yes

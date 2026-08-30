@@ -144,12 +144,20 @@ MVP bukan tentang fitur lengkap. MVP tentang **membuktikan bahwa pendekatan ini 
 
 ---
 
-## Pilot Site Requirements
+## Pilot Site: Kabupaten Banjarnegara, Jawa Tengah
 
-### Kriteria Pemilihan Pilot
+### Wilayah Pilot & Karakteristik
+- **Lokasi Terpilih:** **Kabupaten Banjarnegara, Jawa Tengah** (Kawasan Hulu DAS Serayu).
+- **Dataset Batas Administrasi Spasial:**
+  - Batas 20 Kecamatan (`data/map/BOUNDARY/Administrasi Kecamatan.geojson`)
+  - Batas 278 Desa/Kelurahan (`data/map/BOUNDARY/Administrasi Desa.geojson`)
+- **Fokus Restorasi:** Konservasi tanah & air, agroforestri lereng curam, pencegahan erosi/longsor, dan hutan lindung/rakyat.
+
+### Kriteria Pemilihan Plot Pilot
 
 | Kriteria | Requirement |
 |----------|-------------|
+| Lokasi | Berada di dalam batas administrasi Kabupaten Banjarnegara |
 | Ukuran | Minimal 3 plot, masing-masing > 500 m² |
 | Usia rehabilitasi | Sudah ditanam minimal 6 bulan |
 | Aksesibilitas | Bisa dikunjungi petugas untuk monitoring |
@@ -160,8 +168,9 @@ MVP bukan tentang fitur lengkap. MVP tentang **membuktikan bahwa pendekatan ini 
 
 | Data | Sumber | Frekuensi |
 |------|--------|-----------|
-| GPS koordinat plot | Field (satu kali) | Awal |
-| Polygon boundary | Field / existing GIS (satu kali) | Awal |
+| Batas Administrasi Wilayah | `data/map/BOUNDARY/` (Kecamatan & Desa) | Layer Spasial Referensi |
+| GPS koordinat plot | Field / Geolocation (satu kali) | Awal |
+| Polygon boundary | Field / MapLibre Drawing | Awal |
 | Planting data | Records / interview | Awal |
 | Monitoring kondisi tanaman | Field visit | 2x selama pilot |
 | Foto kondisi | Field visit | Setiap monitoring |

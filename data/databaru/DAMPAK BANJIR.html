@@ -1,0 +1,2422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Analisis Dampak Bencana</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; padding: 20px; font-size: 0.9rem; }
+        .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; }
+        .table thead th { background-color: #002060; color: white; vertical-align: middle; text-align: center; }
+        .bg-rendah { background-color: #d4edda !important; color: #155724; }
+        .bg-sedang { background-color: #fff3cd !important; color: #856404; }
+        .bg-tinggi { background-color: #f8d7da !important; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h2 class="mb-4 text-center">Laporan Analisis Dampak Bencana Dasimetrik</h2>
+        <div class="card p-4">
+            <div class="table-responsive">
+                <table id="tabelBencana" class="table table-bordered table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Desa/Kelurahan</th>
+                            <th rowspan="2">Kecamatan</th>
+                            <th colspan="3" class="bg-primary">Luas Bahaya (Ha)</th>
+                            <th rowspan="2">Total Luas</th>
+                            <th rowspan="2">Kelas Dominan</th>
+                            <th colspan="3" class="bg-success">Penduduk Terpapar (Jiwa)</th>
+                            <th rowspan="2">Total Penduduk</th>
+                        </tr>
+                        <tr>
+                            <th style="background-color: #92D050; color: black;">Rendah</th>
+                            <th style="background-color: #FFFF00; color: black;">Sedang</th>
+                            <th style="background-color: #FF0000; color: white;">Tinggi</th>
+                            <th style="background-color: #92D050; color: black;">Rendah</th>
+                            <th style="background-color: #FFFF00; color: black;">Sedang</th>
+                            <th style="background-color: #FF0000; color: white;">Tinggi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>Banjar Kulon</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">0.35</td>
+                            <td class="text-end">1.15</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">1.5</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Banjarmangu</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">7.35</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">7.35</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">10</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">10</td>
+                        </tr>
+                        <tr>
+                            <td>Gripit</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">3.28</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">3.28</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Jenggawur</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">28.06</td>
+                            <td class="text-end">37.8</td>
+                            <td class="text-end">12.3</td>
+                            <td class="text-end fw-bold">78.16</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">173</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">173</td>
+                        </tr>
+                        <tr>
+                            <td>Kalilunjar</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">17.88</td>
+                            <td class="text-end">0.35</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">18.23</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kasenent</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">20.98</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">20.98</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kendaga</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">6.28</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">6.28</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Rejasari</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">26.47</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">26.47</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">216</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">216</td>
+                        </tr>
+                        <tr>
+                            <td>Sigeblok</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">1.15</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">1.15</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Sijeruk</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">1.5</td>
+                            <td class="text-end">0.8</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">2.3</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Sipedang</td>
+                            <td>Banjarmangu</td>
+                            <td class="text-end">8.76</td>
+                            <td class="text-end">3.98</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">12.74</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Ampelsari</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">9.65</td>
+                            <td class="text-end">1.5</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">11.15</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">158</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">158</td>
+                        </tr>
+                        <tr>
+                            <td>Argasoka</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">0.8</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">0.8</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">38</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">38</td>
+                        </tr>
+                        <tr>
+                            <td>GunungJati</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">29.92</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">29.92</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Karangtengah</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">20.0</td>
+                            <td class="text-end">5.22</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">25.22</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">587</td>
+                            <td class="text-end">8</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">595</td>
+                        </tr>
+                        <tr>
+                            <td>Kebutuh Duwur</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">3.54</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">3.54</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kebutuh Jurang</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">1.86</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">1.86</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">9</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">9</td>
+                        </tr>
+                        <tr>
+                            <td>Krandegan</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">16.38</td>
+                            <td class="text-end">3.72</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">20.1</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">716</td>
+                            <td class="text-end">22</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">738</td>
+                        </tr>
+                        <tr>
+                            <td>Kuta Banjarnegara</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">38.06</td>
+                            <td class="text-end">9.21</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">47.27</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">1,738</td>
+                            <td class="text-end">311</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">2,049</td>
+                        </tr>
+                        <tr>
+                            <td>Parakancanggah</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">20.09</td>
+                            <td class="text-end">8.94</td>
+                            <td class="text-end">1.5</td>
+                            <td class="text-end fw-bold">30.53</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">612</td>
+                            <td class="text-end">4</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">616</td>
+                        </tr>
+                        <tr>
+                            <td>Pasangkalan</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">30.71</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">30.71</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">92</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">92</td>
+                        </tr>
+                        <tr>
+                            <td>Semampir</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">30.54</td>
+                            <td class="text-end">20.62</td>
+                            <td class="text-end">4.34</td>
+                            <td class="text-end fw-bold">55.5</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">558</td>
+                            <td class="text-end">29</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">587</td>
+                        </tr>
+                        <tr>
+                            <td>Semarang</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">34.87</td>
+                            <td class="text-end">22.93</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">57.8</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">1,713</td>
+                            <td class="text-end">717</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">2,430</td>
+                        </tr>
+                        <tr>
+                            <td>Sukanandi</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">55.23</td>
+                            <td class="text-end">4.96</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">60.19</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">510</td>
+                            <td class="text-end">20</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">530</td>
+                        </tr>
+                        <tr>
+                            <td>Sukayasa</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">9.56</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">9.56</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Twelagiri</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">6.82</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">6.82</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">2</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">2</td>
+                        </tr>
+                        <tr>
+                            <td>Wangon</td>
+                            <td>Banjarnegara</td>
+                            <td class="text-end">27.53</td>
+                            <td class="text-end">7.35</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">34.88</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">623</td>
+                            <td class="text-end">20</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">643</td>
+                        </tr>
+                        <tr>
+                            <td>Beji</td>
+                            <td>Batur</td>
+                            <td class="text-end">34.26</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">34.26</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Condongcampur</td>
+                            <td>Batur</td>
+                            <td class="text-end">13.28</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">13.28</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Gembol</td>
+                            <td>Batur</td>
+                            <td class="text-end">11.77</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">11.77</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kepakisan</td>
+                            <td>Batur</td>
+                            <td class="text-end">22.39</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">22.39</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Pasurenan</td>
+                            <td>Batur</td>
+                            <td class="text-end">16.02</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">16.02</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Pekasiran</td>
+                            <td>Batur</td>
+                            <td class="text-end">21.24</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">21.24</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Semangkung</td>
+                            <td>Batur</td>
+                            <td class="text-end">2.21</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">2.21</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Bandingan</td>
+                            <td>Bawang</td>
+                            <td class="text-end">64.0</td>
+                            <td class="text-end">103.56</td>
+                            <td class="text-end">71.52</td>
+                            <td class="text-end fw-bold">239.08</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">25</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">25</td>
+                        </tr>
+                        <tr>
+                            <td>Bawang</td>
+                            <td>Bawang</td>
+                            <td class="text-end">17.44</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">17.44</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">70</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">70</td>
+                        </tr>
+                        <tr>
+                            <td>Binorong</td>
+                            <td>Bawang</td>
+                            <td class="text-end">11.86</td>
+                            <td class="text-end">5.66</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">17.52</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">311</td>
+                            <td class="text-end">154</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">465</td>
+                        </tr>
+                        <tr>
+                            <td>Blambangan</td>
+                            <td>Bawang</td>
+                            <td class="text-end">50.63</td>
+                            <td class="text-end">36.91</td>
+                            <td class="text-end">8.76</td>
+                            <td class="text-end fw-bold">96.3</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">1</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">1</td>
+                        </tr>
+                        <tr>
+                            <td>Depok</td>
+                            <td>Bawang</td>
+                            <td class="text-end">16.55</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">16.55</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">14</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">14</td>
+                        </tr>
+                        <tr>
+                            <td>Duren</td>
+                            <td>Bawang</td>
+                            <td class="text-end">51.25</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">51.25</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">679</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">679</td>
+                        </tr>
+                        <tr>
+                            <td>Gemuruh</td>
+                            <td>Bawang</td>
+                            <td class="text-end">21.95</td>
+                            <td class="text-end">40.98</td>
+                            <td class="text-end">12.04</td>
+                            <td class="text-end fw-bold">74.97</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">31</td>
+                            <td class="text-end">5</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">36</td>
+                        </tr>
+                        <tr>
+                            <td>Gentasari</td>
+                            <td>Bawang</td>
+                            <td class="text-end">69.48</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">69.48</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">2,015</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">2,015</td>
+                        </tr>
+                        <tr>
+                            <td>Joho</td>
+                            <td>Bawang</td>
+                            <td class="text-end">59.13</td>
+                            <td class="text-end">3.72</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">62.85</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">491</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">491</td>
+                        </tr>
+                        <tr>
+                            <td>Kutayasa Kulon</td>
+                            <td>Bawang</td>
+                            <td class="text-end">41.51</td>
+                            <td class="text-end">5.4</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">46.91</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">70</td>
+                            <td class="text-end">6</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">76</td>
+                        </tr>
+                        <tr>
+                            <td>Lebakwangi</td>
+                            <td>Bawang</td>
+                            <td class="text-end">11.51</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">11.51</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">37</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">37</td>
+                        </tr>
+                        <tr>
+                            <td>Mantrianom</td>
+                            <td>Bawang</td>
+                            <td class="text-end">39.92</td>
+                            <td class="text-end">2.39</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">42.31</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">364</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">364</td>
+                        </tr>
+                        <tr>
+                            <td>Masaran</td>
+                            <td>Bawang</td>
+                            <td class="text-end">25.93</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">25.93</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">45</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">45</td>
+                        </tr>
+                        <tr>
+                            <td>Watu Urip</td>
+                            <td>Bawang</td>
+                            <td class="text-end">42.31</td>
+                            <td class="text-end">0.8</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">43.11</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">31</td>
+                            <td class="text-end">11</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">42</td>
+                        </tr>
+                        <tr>
+                            <td>Winong</td>
+                            <td>Bawang</td>
+                            <td class="text-end">0.35</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">0.35</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">6</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">6</td>
+                        </tr>
+                        <tr>
+                            <td>Asinan</td>
+                            <td>Kalibening</td>
+                            <td class="text-end">15.58</td>
+                            <td class="text-end">8.41</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">23.99</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kalibening</td>
+                            <td>Kalibening</td>
+                            <td class="text-end">12.83</td>
+                            <td class="text-end">5.75</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">18.58</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Pawedan</td>
+                            <td>Karangkobar</td>
+                            <td class="text-end">2.39</td>
+                            <td class="text-end">1.5</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">3.89</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Bantarwaru</td>
+                            <td>Madukara</td>
+                            <td class="text-end">20.09</td>
+                            <td class="text-end">2.92</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">23.01</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Blitar</td>
+                            <td>Madukara</td>
+                            <td class="text-end">20.89</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">20.89</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">143</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">143</td>
+                        </tr>
+                        <tr>
+                            <td>Dawuhan</td>
+                            <td>Madukara</td>
+                            <td class="text-end">8.23</td>
+                            <td class="text-end">5.05</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">13.28</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kalibenda</td>
+                            <td>Madukara</td>
+                            <td class="text-end">11.6</td>
+                            <td class="text-end">3.89</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">15.49</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kaliurip</td>
+                            <td>Madukara</td>
+                            <td class="text-end">28.06</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">28.06</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Karangannyar</td>
+                            <td>Madukara</td>
+                            <td class="text-end">0.89</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">0.89</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kenteng</td>
+                            <td>Madukara</td>
+                            <td class="text-end">30.71</td>
+                            <td class="text-end">15.58</td>
+                            <td class="text-end">1.59</td>
+                            <td class="text-end fw-bold">47.88</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">42</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">42</td>
+                        </tr>
+                        <tr>
+                            <td>Kotayasa Lor</td>
+                            <td>Madukara</td>
+                            <td class="text-end">40.72</td>
+                            <td class="text-end">3.28</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">44.0</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">173</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">173</td>
+                        </tr>
+                        <tr>
+                            <td>Limbangan</td>
+                            <td>Madukara</td>
+                            <td class="text-end">28.77</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">28.77</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">234</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">234</td>
+                        </tr>
+                        <tr>
+                            <td>Madukara</td>
+                            <td>Madukara</td>
+                            <td class="text-end">3.98</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">3.98</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">32</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">32</td>
+                        </tr>
+                        <tr>
+                            <td>Pagelak</td>
+                            <td>Madukara</td>
+                            <td class="text-end">15.67</td>
+                            <td class="text-end">4.25</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">19.92</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">207</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">207</td>
+                        </tr>
+                        <tr>
+                            <td>Pakelen</td>
+                            <td>Madukara</td>
+                            <td class="text-end">22.75</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">22.75</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Pekauman</td>
+                            <td>Madukara</td>
+                            <td class="text-end">1.59</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">1.59</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Petambakan</td>
+                            <td>Madukara</td>
+                            <td class="text-end">31.6</td>
+                            <td class="text-end">0.53</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">32.13</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Rakitan</td>
+                            <td>Madukara</td>
+                            <td class="text-end">20.71</td>
+                            <td class="text-end">1.24</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">21.95</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">78</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">78</td>
+                        </tr>
+                        <tr>
+                            <td>Rejasa</td>
+                            <td>Madukara</td>
+                            <td class="text-end">43.46</td>
+                            <td class="text-end">15.05</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">58.51</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">542</td>
+                            <td class="text-end">54</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">596</td>
+                        </tr>
+                        <tr>
+                            <td>Sered</td>
+                            <td>Madukara</td>
+                            <td class="text-end">29.65</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">29.65</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">3</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">3</td>
+                        </tr>
+                        <tr>
+                            <td>Singometro</td>
+                            <td>Madukara</td>
+                            <td class="text-end">17.79</td>
+                            <td class="text-end">1.5</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">19.29</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">278</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">278</td>
+                        </tr>
+                        <tr>
+                            <td>Talunamba</td>
+                            <td>Madukara</td>
+                            <td class="text-end">6.37</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">6.37</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">24</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">24</td>
+                        </tr>
+                        <tr>
+                            <td>Glempang</td>
+                            <td>Mandiraja</td>
+                            <td class="text-end">49.3</td>
+                            <td class="text-end">18.68</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">67.98</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">175</td>
+                            <td class="text-end">158</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">333</td>
+                        </tr>
+                        <tr>
+                            <td>Jalatunda</td>
+                            <td>Mandiraja</td>
+                            <td class="text-end">44.43</td>
+                            <td class="text-end">8.32</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">52.75</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">192</td>
+                            <td class="text-end">59</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">251</td>
+                        </tr>
+                        <tr>
+                            <td>Kaliwungu</td>
+                            <td>Mandiraja</td>
+                            <td class="text-end">35.14</td>
+                            <td class="text-end">32.75</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">67.89</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">53</td>
+                            <td class="text-end">127</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">180</td>
+                        </tr>
+                        <tr>
+                            <td>Kebanaran</td>
+                            <td>Mandiraja</td>
+                            <td class="text-end">61.34</td>
+                            <td class="text-end">34.7</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">96.04</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">420</td>
+                            <td class="text-end">223</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">643</td>
+                        </tr>
+                        <tr>
+                            <td>Kertayasa</td>
+                            <td>Mandiraja</td>
+                            <td class="text-end">23.19</td>
+                            <td class="text-end">0.27</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">23.46</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">212</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">212</td>
+                        </tr>
+                        <tr>
+                            <td>Panggisari</td>
+                            <td>Mandiraja</td>
+                            <td class="text-end">26.11</td>
+                            <td class="text-end">23.55</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">49.66</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">107</td>
+                            <td class="text-end">43</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">150</td>
+                        </tr>
+                        <tr>
+                            <td>Salamerta</td>
+                            <td>Mandiraja</td>
+                            <td class="text-end">24.16</td>
+                            <td class="text-end">28.77</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">52.93</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">289</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">289</td>
+                        </tr>
+                        <tr>
+                            <td>Somawangi</td>
+                            <td>Mandiraja</td>
+                            <td class="text-end">47.0</td>
+                            <td class="text-end">28.15</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">75.15</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">362</td>
+                            <td class="text-end">150</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">512</td>
+                        </tr>
+                        <tr>
+                            <td>Babadan</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">37.88</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">37.88</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Gumingsir</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">40.01</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">40.01</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">303</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">303</td>
+                        </tr>
+                        <tr>
+                            <td>Kalitlaga</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">6.46</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">6.46</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Karangnangka</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">5.4</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">5.4</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">3</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">3</td>
+                        </tr>
+                        <tr>
+                            <td>Kasmaran</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">0.97</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">0.97</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kayuares</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">2.39</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">2.39</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Larangan</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">24.08</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">24.08</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Majasari</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">12.22</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">12.22</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Metawana</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">2.74</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">2.74</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Nagasari</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">29.65</td>
+                            <td class="text-end">1.68</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">31.33</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">48</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">48</td>
+                        </tr>
+                        <tr>
+                            <td>Pagentan</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">17.97</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">17.97</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Plumbungan</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">9.74</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">9.74</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Sokaraja</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">43.73</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">43.73</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">80</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">80</td>
+                        </tr>
+                        <tr>
+                            <td>Tegaljeruk</td>
+                            <td>Pagentan</td>
+                            <td class="text-end">23.28</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">23.28</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Biting</td>
+                            <td>Pejawaran</td>
+                            <td class="text-end">6.28</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">6.28</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Grogol</td>
+                            <td>Pejawaran</td>
+                            <td class="text-end">0.44</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">0.44</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kalilunjar</td>
+                            <td>Pejawaran</td>
+                            <td class="text-end">5.75</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">5.75</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Karangsari</td>
+                            <td>Pejawaran</td>
+                            <td class="text-end">11.33</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">11.33</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">99</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">99</td>
+                        </tr>
+                        <tr>
+                            <td>Karekan</td>
+                            <td>Pejawaran</td>
+                            <td class="text-end">18.41</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">18.41</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Pengundungan</td>
+                            <td>Pejawaran</td>
+                            <td class="text-end">23.1</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">23.1</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Sarwodadi</td>
+                            <td>Pejawaran</td>
+                            <td class="text-end">36.73</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">36.73</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Badakarya</td>
+                            <td>Punggelan</td>
+                            <td class="text-end">27.09</td>
+                            <td class="text-end">29.03</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">56.12</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">486</td>
+                            <td class="text-end">62</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">548</td>
+                        </tr>
+                        <tr>
+                            <td>Bandolharjo</td>
+                            <td>Punggelan</td>
+                            <td class="text-end">54.44</td>
+                            <td class="text-end">12.83</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">67.27</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">364</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">364</td>
+                        </tr>
+                        <tr>
+                            <td>Mlaya</td>
+                            <td>Punggelan</td>
+                            <td class="text-end">29.74</td>
+                            <td class="text-end">0.8</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">30.54</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">894</td>
+                            <td class="text-end">165</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">1,059</td>
+                        </tr>
+                        <tr>
+                            <td>Sawangan</td>
+                            <td>Punggelan</td>
+                            <td class="text-end">24.16</td>
+                            <td class="text-end">6.37</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">30.53</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">203</td>
+                            <td class="text-end">30</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">233</td>
+                        </tr>
+                        <tr>
+                            <td>Sidarata</td>
+                            <td>Punggelan</td>
+                            <td class="text-end">19.12</td>
+                            <td class="text-end">31.42</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">50.54</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">443</td>
+                            <td class="text-end">38</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">481</td>
+                        </tr>
+                        <tr>
+                            <td>Tanjungtirta</td>
+                            <td>Punggelan</td>
+                            <td class="text-end">41.34</td>
+                            <td class="text-end">1.59</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">42.93</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Tlaga</td>
+                            <td>Punggelan</td>
+                            <td class="text-end">34.79</td>
+                            <td class="text-end">23.63</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">58.42</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">215</td>
+                            <td class="text-end">761</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">976</td>
+                        </tr>
+                        <tr>
+                            <td>Tribuana</td>
+                            <td>Punggelan</td>
+                            <td class="text-end">16.73</td>
+                            <td class="text-end">7.7</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">24.43</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">125</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">125</td>
+                        </tr>
+                        <tr>
+                            <td>Danaraja</td>
+                            <td>Purwonegoro</td>
+                            <td class="text-end">18.94</td>
+                            <td class="text-end">1.15</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">20.09</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">124</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">124</td>
+                        </tr>
+                        <tr>
+                            <td>Gumiwang</td>
+                            <td>Purwonegoro</td>
+                            <td class="text-end">29.3</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">29.3</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">95</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">95</td>
+                        </tr>
+                        <tr>
+                            <td>Karangannyar</td>
+                            <td>Purwonegoro</td>
+                            <td class="text-end">63.2</td>
+                            <td class="text-end">15.76</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">78.96</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">581</td>
+                            <td class="text-end">148</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">729</td>
+                        </tr>
+                        <tr>
+                            <td>Kutawuluh</td>
+                            <td>Purwonegoro</td>
+                            <td class="text-end">53.73</td>
+                            <td class="text-end">0.97</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">54.7</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">821</td>
+                            <td class="text-end">2</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">823</td>
+                        </tr>
+                        <tr>
+                            <td>Mandiraja Kulon</td>
+                            <td>Purwonegoro</td>
+                            <td class="text-end">12.83</td>
+                            <td class="text-end">10.89</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">23.72</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">40</td>
+                            <td class="text-end">20</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">60</td>
+                        </tr>
+                        <tr>
+                            <td>Mandiraja Wetan</td>
+                            <td>Purwonegoro</td>
+                            <td class="text-end">14.25</td>
+                            <td class="text-end">0.27</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">14.52</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">48</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">48</td>
+                        </tr>
+                        <tr>
+                            <td>Merden</td>
+                            <td>Purwonegoro</td>
+                            <td class="text-end">51.34</td>
+                            <td class="text-end">9.83</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">61.17</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">155</td>
+                            <td class="text-end">59</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">214</td>
+                        </tr>
+                        <tr>
+                            <td>Mertasari Wetan</td>
+                            <td>Purwonegoro</td>
+                            <td class="text-end">63.11</td>
+                            <td class="text-end">6.11</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">69.22</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">1,435</td>
+                            <td class="text-end">282</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">1,717</td>
+                        </tr>
+                        <tr>
+                            <td>Parakan</td>
+                            <td>Purwonegoro</td>
+                            <td class="text-end">65.41</td>
+                            <td class="text-end">8.14</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">73.55</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">1,520</td>
+                            <td class="text-end">238</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">1,758</td>
+                        </tr>
+                        <tr>
+                            <td>Purwonegoro</td>
+                            <td>Purwonegoro</td>
+                            <td class="text-end">21.69</td>
+                            <td class="text-end">16.91</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">38.6</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Kalilandak</td>
+                            <td>Purworejo Klampo</td>
+                            <td class="text-end">13.1</td>
+                            <td class="text-end">24.08</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">37.18</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">206</td>
+                            <td class="text-end">208</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">414</td>
+                        </tr>
+                        <tr>
+                            <td>Kalimandi</td>
+                            <td>Purworejo Klampo</td>
+                            <td class="text-end">12.22</td>
+                            <td class="text-end">24.43</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">36.65</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">262</td>
+                            <td class="text-end">112</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">374</td>
+                        </tr>
+                        <tr>
+                            <td>Kaliwasuh</td>
+                            <td>Purworejo Klampo</td>
+                            <td class="text-end">11.95</td>
+                            <td class="text-end">9.65</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">21.6</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">113</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">113</td>
+                        </tr>
+                        <tr>
+                            <td>Kecitran</td>
+                            <td>Purworejo Klampo</td>
+                            <td class="text-end">42.84</td>
+                            <td class="text-end">60.19</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">103.03</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">1,558</td>
+                            <td class="text-end">455</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">2,013</td>
+                        </tr>
+                        <tr>
+                            <td>Klampok</td>
+                            <td>Purworejo Klampo</td>
+                            <td class="text-end">28.59</td>
+                            <td class="text-end">37.62</td>
+                            <td class="text-end">1.06</td>
+                            <td class="text-end fw-bold">67.27</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">124</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">124</td>
+                        </tr>
+                        <tr>
+                            <td>Purworejo</td>
+                            <td>Purworejo Klampo</td>
+                            <td class="text-end">69.84</td>
+                            <td class="text-end">16.73</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">86.57</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">1,290</td>
+                            <td class="text-end">82</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">1,372</td>
+                        </tr>
+                        <tr>
+                            <td>Sirkandi</td>
+                            <td>Purworejo Klampo</td>
+                            <td class="text-end">50.81</td>
+                            <td class="text-end">45.67</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">96.48</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">283</td>
+                            <td class="text-end">85</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">368</td>
+                        </tr>
+                        <tr>
+                            <td>Adipasir</td>
+                            <td>Rakit</td>
+                            <td class="text-end">20.09</td>
+                            <td class="text-end">2.39</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">22.48</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">30</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">30</td>
+                        </tr>
+                        <tr>
+                            <td>Badamita</td>
+                            <td>Rakit</td>
+                            <td class="text-end">34.96</td>
+                            <td class="text-end">26.29</td>
+                            <td class="text-end">0.18</td>
+                            <td class="text-end fw-bold">61.43</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">91</td>
+                            <td class="text-end">26</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">117</td>
+                        </tr>
+                        <tr>
+                            <td>Bandingan</td>
+                            <td>Rakit</td>
+                            <td class="text-end">19.3</td>
+                            <td class="text-end">17.17</td>
+                            <td class="text-end">0.09</td>
+                            <td class="text-end fw-bold">36.56</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">11</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">11</td>
+                        </tr>
+                        <tr>
+                            <td>Gelang</td>
+                            <td>Rakit</td>
+                            <td class="text-end">15.05</td>
+                            <td class="text-end">2.39</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">17.44</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">24</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">24</td>
+                        </tr>
+                        <tr>
+                            <td>Kalipelus</td>
+                            <td>Rakit</td>
+                            <td class="text-end">34.79</td>
+                            <td class="text-end">1.68</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">36.47</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">49</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">49</td>
+                        </tr>
+                        <tr>
+                            <td>Kincang</td>
+                            <td>Rakit</td>
+                            <td class="text-end">23.63</td>
+                            <td class="text-end">9.38</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">33.01</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">167</td>
+                            <td class="text-end">26</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">193</td>
+                        </tr>
+                        <tr>
+                            <td>Lengkong</td>
+                            <td>Rakit</td>
+                            <td class="text-end">24.87</td>
+                            <td class="text-end">16.91</td>
+                            <td class="text-end">0.97</td>
+                            <td class="text-end fw-bold">42.75</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">2</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">2</td>
+                        </tr>
+                        <tr>
+                            <td>Luwung</td>
+                            <td>Rakit</td>
+                            <td class="text-end">18.85</td>
+                            <td class="text-end">1.33</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">20.18</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">69</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">69</td>
+                        </tr>
+                        <tr>
+                            <td>Pingit</td>
+                            <td>Rakit</td>
+                            <td class="text-end">23.01</td>
+                            <td class="text-end">3.19</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">26.2</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">176</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">176</td>
+                        </tr>
+                        <tr>
+                            <td>Rakit</td>
+                            <td>Rakit</td>
+                            <td class="text-end">10.0</td>
+                            <td class="text-end">2.66</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">12.66</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Sambung</td>
+                            <td>Rakit</td>
+                            <td class="text-end">14.25</td>
+                            <td class="text-end">17.88</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">32.13</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">136</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">136</td>
+                        </tr>
+                        <tr>
+                            <td>Situwangi</td>
+                            <td>Rakit</td>
+                            <td class="text-end">7.79</td>
+                            <td class="text-end">2.66</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">10.45</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">9</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">9</td>
+                        </tr>
+                        <tr>
+                            <td>Tanjunganom</td>
+                            <td>Rakit</td>
+                            <td class="text-end">21.07</td>
+                            <td class="text-end">6.02</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">27.09</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Bandingan</td>
+                            <td>Sigaluh</td>
+                            <td class="text-end">23.19</td>
+                            <td class="text-end">2.48</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">25.67</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">300</td>
+                            <td class="text-end">11</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">311</td>
+                        </tr>
+                        <tr>
+                            <td>Bojanegara</td>
+                            <td>Sigaluh</td>
+                            <td class="text-end">42.04</td>
+                            <td class="text-end">1.42</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">43.46</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">468</td>
+                            <td class="text-end">5</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">473</td>
+                        </tr>
+                        <tr>
+                            <td>Gembongan</td>
+                            <td>Sigaluh</td>
+                            <td class="text-end">27.26</td>
+                            <td class="text-end">0.18</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">27.44</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">402</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">402</td>
+                        </tr>
+                        <tr>
+                            <td>Prigi</td>
+                            <td>Sigaluh</td>
+                            <td class="text-end">53.46</td>
+                            <td class="text-end">4.16</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">57.62</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">253</td>
+                            <td class="text-end">28</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">281</td>
+                        </tr>
+                        <tr>
+                            <td>Randengan</td>
+                            <td>Sigaluh</td>
+                            <td class="text-end">8.94</td>
+                            <td class="text-end">1.33</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">10.27</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">258</td>
+                            <td class="text-end">24</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">282</td>
+                        </tr>
+                        <tr>
+                            <td>Sigaluh</td>
+                            <td>Sigaluh</td>
+                            <td class="text-end">10.53</td>
+                            <td class="text-end">1.24</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">11.77</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">206</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">206</td>
+                        </tr>
+                        <tr>
+                            <td>Tunggara</td>
+                            <td>Sigaluh</td>
+                            <td class="text-end">20.09</td>
+                            <td class="text-end">2.12</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">22.21</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">255</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">255</td>
+                        </tr>
+                        <tr>
+                            <td>Berta</td>
+                            <td>Susukan</td>
+                            <td class="text-end">13.37</td>
+                            <td class="text-end">12.66</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">26.03</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">31</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">31</td>
+                        </tr>
+                        <tr>
+                            <td>Derik</td>
+                            <td>Susukan</td>
+                            <td class="text-end">40.45</td>
+                            <td class="text-end">5.31</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">45.76</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Dermasari</td>
+                            <td>Susukan</td>
+                            <td class="text-end">70.02</td>
+                            <td class="text-end">35.14</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">105.16</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">1,233</td>
+                            <td class="text-end">227</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">1,460</td>
+                        </tr>
+                        <tr>
+                            <td>Gumelan Kulon</td>
+                            <td>Susukan</td>
+                            <td class="text-end">39.04</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">39.04</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">1,105</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">1,105</td>
+                        </tr>
+                        <tr>
+                            <td>Gumelan Wetan</td>
+                            <td>Susukan</td>
+                            <td class="text-end">36.29</td>
+                            <td class="text-end">7.17</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">43.46</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">956</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">956</td>
+                        </tr>
+                        <tr>
+                            <td>Karangjati</td>
+                            <td>Susukan</td>
+                            <td class="text-end">43.37</td>
+                            <td class="text-end">15.14</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">58.51</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">727</td>
+                            <td class="text-end">8</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">735</td>
+                        </tr>
+                        <tr>
+                            <td>Karangsalam</td>
+                            <td>Susukan</td>
+                            <td class="text-end">44.61</td>
+                            <td class="text-end">79.13</td>
+                            <td class="text-end">27.79</td>
+                            <td class="text-end fw-bold">151.53</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">696</td>
+                            <td class="text-end">136</td>
+                            <td class="text-end">63</td>
+                            <td class="text-end fw-bold">895</td>
+                        </tr>
+                        <tr>
+                            <td>Kedawung</td>
+                            <td>Susukan</td>
+                            <td class="text-end">36.91</td>
+                            <td class="text-end">17.88</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">54.79</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">673</td>
+                            <td class="text-end">126</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">799</td>
+                        </tr>
+                        <tr>
+                            <td>Kemrangon</td>
+                            <td>Susukan</td>
+                            <td class="text-end">67.71</td>
+                            <td class="text-end">52.14</td>
+                            <td class="text-end">9.21</td>
+                            <td class="text-end fw-bold">129.06</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">997</td>
+                            <td class="text-end">243</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">1,240</td>
+                        </tr>
+                        <tr>
+                            <td>Pakikiran</td>
+                            <td>Susukan</td>
+                            <td class="text-end">15.4</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">15.4</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">16</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">16</td>
+                        </tr>
+                        <tr>
+                            <td>Penerusan Kulon</td>
+                            <td>Susukan</td>
+                            <td class="text-end">14.34</td>
+                            <td class="text-end">12.22</td>
+                            <td class="text-end">1.06</td>
+                            <td class="text-end fw-bold">27.62</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">115</td>
+                            <td class="text-end">2</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">117</td>
+                        </tr>
+                        <tr>
+                            <td>Penerusan wetan</td>
+                            <td>Susukan</td>
+                            <td class="text-end">2.04</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">2.04</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Piasa Wetan</td>
+                            <td>Susukan</td>
+                            <td class="text-end">23.9</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">23.9</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">276</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">276</td>
+                        </tr>
+                        <tr>
+                            <td>Susukan</td>
+                            <td>Susukan</td>
+                            <td class="text-end">51.25</td>
+                            <td class="text-end">14.96</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">66.21</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">826</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">826</td>
+                        </tr>
+                        <tr>
+                            <td>brengkok</td>
+                            <td>Susukan</td>
+                            <td class="text-end">10.8</td>
+                            <td class="text-end">8.67</td>
+                            <td class="text-end">2.12</td>
+                            <td class="text-end fw-bold">21.59</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">169</td>
+                            <td class="text-end">45</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">214</td>
+                        </tr>
+                        <tr>
+                            <td>Gumingsari</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">10.0</td>
+                            <td class="text-end">16.64</td>
+                            <td class="text-end">4.87</td>
+                            <td class="text-end fw-bold">31.51</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">18</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">18</td>
+                        </tr>
+                        <tr>
+                            <td>Kandangwangi</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">53.99</td>
+                            <td class="text-end">8.23</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">62.22</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">287</td>
+                            <td class="text-end">54</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">341</td>
+                        </tr>
+                        <tr>
+                            <td>Karangjambe</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">74.44</td>
+                            <td class="text-end">110.56</td>
+                            <td class="text-end">66.21</td>
+                            <td class="text-end fw-bold">251.21</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">108</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">108</td>
+                        </tr>
+                        <tr>
+                            <td>Karangkemiri</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">30.36</td>
+                            <td class="text-end">44.43</td>
+                            <td class="text-end">2.04</td>
+                            <td class="text-end fw-bold">76.83</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">871</td>
+                            <td class="text-end">64</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">935</td>
+                        </tr>
+                        <tr>
+                            <td>Kasilip</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">26.55</td>
+                            <td class="text-end">11.51</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">38.06</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">163</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">163</td>
+                        </tr>
+                        <tr>
+                            <td>Lemahjaya</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">38.15</td>
+                            <td class="text-end">1.59</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">39.74</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">42</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">42</td>
+                        </tr>
+                        <tr>
+                            <td>Linggasari</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">59.57</td>
+                            <td class="text-end">28.77</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">88.34</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">599</td>
+                            <td class="text-end">157</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">756</td>
+                        </tr>
+                        <tr>
+                            <td>Medayu</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">56.65</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">56.65</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">673</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">673</td>
+                        </tr>
+                        <tr>
+                            <td>Tapen</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">16.91</td>
+                            <td class="text-end">18.77</td>
+                            <td class="text-end">0.09</td>
+                            <td class="text-end fw-bold">35.77</td>
+                            <td class="text-center bg-sedang fw-bold">Sedang</td>
+                            <td class="text-end">4</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">4</td>
+                        </tr>
+                        <tr>
+                            <td>Wanadadi</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">21.95</td>
+                            <td class="text-end">9.83</td>
+                            <td class="text-end">26.38</td>
+                            <td class="text-end fw-bold">58.16</td>
+                            <td class="text-center bg-tinggi fw-bold">Tinggi</td>
+                            <td class="text-end">47</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">47</td>
+                        </tr>
+                        <tr>
+                            <td>Wanakarsa</td>
+                            <td>Wanadadi</td>
+                            <td class="text-end">39.83</td>
+                            <td class="text-end">30.98</td>
+                            <td class="text-end">50.63</td>
+                            <td class="text-end fw-bold">121.44</td>
+                            <td class="text-center bg-tinggi fw-bold">Tinggi</td>
+                            <td class="text-end">56</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">56</td>
+                        </tr>
+                        <tr>
+                            <td>Dawuhan</td>
+                            <td>Wanayasa</td>
+                            <td class="text-end">7.52</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">7.52</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">20</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">20</td>
+                        </tr>
+                        <tr>
+                            <td>Karangtengah</td>
+                            <td>Wanayasa</td>
+                            <td class="text-end">35.14</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">35.14</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">33</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">33</td>
+                        </tr>
+                        <tr>
+                            <td>Kasimpar</td>
+                            <td>Wanayasa</td>
+                            <td class="text-end">25.93</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">25.93</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">3</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">3</td>
+                        </tr>
+                        <tr>
+                            <td>Legoksayem</td>
+                            <td>Wanayasa</td>
+                            <td class="text-end">42.22</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">42.22</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">9</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">9</td>
+                        </tr>
+                        <tr>
+                            <td>Pagergunung</td>
+                            <td>Wanayasa</td>
+                            <td class="text-end">11.77</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">11.77</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Pananggungan</td>
+                            <td>Wanayasa</td>
+                            <td class="text-end">6.11</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">6.11</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Pandansari</td>
+                            <td>Wanayasa</td>
+                            <td class="text-end">15.58</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">15.58</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Susukan</td>
+                            <td>Wanayasa</td>
+                            <td class="text-end">9.74</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">9.74</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                        <tr>
+                            <td>Suwidak</td>
+                            <td>Wanayasa</td>
+                            <td class="text-end">31.07</td>
+                            <td class="text-end">1.86</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">32.93</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">23</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">23</td>
+                        </tr>
+                        <tr>
+                            <td>Wanayasa</td>
+                            <td>Wanayasa</td>
+                            <td class="text-end">10.53</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end">0.0</td>
+                            <td class="text-end fw-bold">10.53</td>
+                            <td class="text-center bg-rendah fw-bold">Rendah</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end">0</td>
+                            <td class="text-end fw-bold">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery & DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#tabelBencana').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
+                },
+                "pageLength": 25,
+                "order": [[ 1, "asc" ], [ 0, "asc" ]] // Sort by Kecamatan then Desa
+            });
+        });
+    </script>
+</body>
+</html>
