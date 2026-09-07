@@ -7,10 +7,11 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   label?: string
   error?: string
   helperText?: string
+  rightElement?: React.ReactNode
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helperText, className, id, ...props }, ref) => {
+  ({ label, error, helperText, rightElement, className, id, ...props }, ref) => {
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined)
 
     return (
@@ -20,13 +21,32 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {label}
           </label>
         )}
-        <input
-          id={inputId}
-          ref={ref}
-          className={clsx('input-control', error && 'border-danger', className)}
-          style={error ? { borderColor: 'var(--status-at-risk)' } : undefined}
-          {...props}
-        />
+        <div style={{ position: 'relative', width: '100%', display: 'flex', alignItems: 'center' }}>
+          <input
+            id={inputId}
+            ref={ref}
+            className={clsx('input-control', error && 'border-danger', className)}
+            style={{
+              ...(error ? { borderColor: 'var(--status-at-risk)' } : {}),
+              ...(rightElement ? { paddingRight: '2.5rem' } : {}),
+            }}
+            {...props}
+          />
+          {rightElement && (
+            <div
+              style={{
+                position: 'absolute',
+                right: '0.75rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 2,
+              }}
+            >
+              {rightElement}
+            </div>
+          )}
+        </div>
         {error ? (
           <span style={{ fontSize: '0.75rem', color: 'var(--status-at-risk)', marginTop: '2px' }}>
             {error}

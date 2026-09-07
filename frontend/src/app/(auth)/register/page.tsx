@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Trees, AlertCircle, CheckCircle } from 'lucide-react'
+import { Trees, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -15,13 +15,30 @@ export default function RegisterPage() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  const isPasswordMatched = confirmPassword.length > 0 && password === confirmPassword
+  const isPasswordMismatch = confirmPassword.length > 0 && password !== confirmPassword
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+
+    if (password.length < 6) {
+      setError('Password minimal 6 karakter.')
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setError('Password dan Ulangi Password tidak cocok! Harap periksa kembali.')
+      return
+    }
+
     setIsLoading(true)
 
     try {
@@ -46,7 +63,7 @@ export default function RegisterPage() {
         setTimeout(() => {
           router.push('/overview')
           router.refresh()
-        }, 1500)
+        }, 1200)
       }
     } catch (err: any) {
       setError(err.message || 'Terjadi kesalahan sistem.')
@@ -78,7 +95,7 @@ export default function RegisterPage() {
         }}
       >
         {/* Logo & Header */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div
             style={{
               width: '48px',
@@ -143,11 +160,11 @@ export default function RegisterPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
           <Input
             label="Nama Lengkap / Instansi"
             type="text"
-            placeholder="Misal: Ibu Sari (Dinas LHK)"
+            placeholder="Misal: Donatur / Dinas LHK"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -162,21 +179,71 @@ export default function RegisterPage() {
             required
           />
 
+          {/* Password with Eye Toggle */}
           <Input
             label="Password (min. 6 karakter)"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             minLength={6}
             required
+            rightElement={
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  color: 'var(--text-muted)',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                title={showPassword ? 'Sembunyikan password' : 'Lihat password'}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            }
+          />
+
+          {/* Retype Password with Eye Toggle */}
+          <Input
+            label="Ulangi Password"
+            type={showConfirmPassword ? 'text' : 'password'}
+            placeholder="••••••••"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            minLength={6}
+            required
+            error={isPasswordMismatch ? 'Password belum sesuai' : undefined}
+            helperText={isPasswordMatched ? '✓ Password cocok' : undefined}
+            rightElement={
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  color: 'var(--text-muted)',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                title={showConfirmPassword ? 'Sembunyikan password' : 'Lihat password'}
+              >
+                {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            }
           />
 
           <Button
             type="submit"
             variant="primary"
             isLoading={isLoading}
-            style={{ width: '100%', marginTop: '0.5rem' }}
+            style={{ width: '100%', marginTop: '0.35rem' }}
           >
             Daftar Sekarang
           </Button>
@@ -184,7 +251,7 @@ export default function RegisterPage() {
 
         <div
           style={{
-            marginTop: '1.75rem',
+            marginTop: '1.5rem',
             paddingTop: '1.25rem',
             borderTop: '1px solid var(--border-subtle)',
             textAlign: 'center',

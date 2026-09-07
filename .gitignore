@@ -36,6 +36,10 @@ htmlcov/
 *.pem
 *.key
 *.json-key
+*key*.json
+backend/gee-key.json
+data/*.json
+
 
 # IDE & OS files
 .DS_Store

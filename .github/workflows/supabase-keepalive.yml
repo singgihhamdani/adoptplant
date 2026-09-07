@@ -1,0 +1,35 @@
+name: Supabase Keep-Alive Ping
+
+on:
+  schedule:
+    # Berjalan setiap 3 hari sekali pada jam 03:00 UTC
+    - cron: '0 3 */3 * *'
+  workflow_dispatch:
+    # Memungkinkan manual trigger dari tab "Actions" di GitHub
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API via PostgREST
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://cwpbfrnlxibrrpkmaepc.supabase.co' }}
+          SUPABASE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3cGJmcm5seGlicnJwa21hZXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMDczNzMsImV4cCI6MjEwMzU4MzM3M30.nl5laEnxx47LVO8wpwd06ZIADPvfaC76LrFSl0Sfd-Y' }}
+        run: |
+          echo "Sending keep-alive ping to Supabase: $SUPABASE_URL ..."
+          HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" \
+            -X GET "$SUPABASE_URL/rest/v1/projects?select=id&limit=1" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY")
+          
+          echo "Response HTTP Status: $HTTP_STATUS"
+          cat response.json || true
+          
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+            echo "SUCCESS: Supabase project activity recorded successfully!"
+            exit 0
+          else
+            echo "WARNING: Request returned status $HTTP_STATUS. Please verify if Supabase project is active or credentials are valid."
+            # Don't fail the build so GitHub Actions doesn't send failure alerts if project is paused
+            exit 0
+          fi

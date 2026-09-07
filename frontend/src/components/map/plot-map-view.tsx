@@ -57,13 +57,30 @@ const LEAFLET_BASEMAPS = {
   },
 }
 
+const POLA_RUANG_COLORS: Record<string, string> = {
+  'HUTAN LINDUNG': '#047857',
+  'HUTAN PRODUKSI TERBATAS': '#15803d',
+  'HUTAN PRODUKSI TETAP': '#4d7c0f',
+  'KAWASAN LINDUNG BAWAHANNYA': '#059669',
+  'SEMPADAN SUNGAI': '#0d9488',
+  'SEMPADAN PERKOTAAN': '#0284c7',
+  'PERTANIAN HORTIKULTURA': '#84cc16',
+  'PERTANIAN LAHAN BASAH': '#65a30d',
+  'PERTANIAN SAWAH IRIGASI': '#a3e635',
+  'PERTANIAN LAHAN KERING': '#eab308',
+  'AIR TAWAR': '#3b82f6',
+  'PERMUKIMAN PERDESAAN': '#f97316',
+  'PERMUKIMAN PERKOTAAN': '#ef4444',
+  INDUSTRI: '#8b5cf6',
+}
+
 export function PlotMapView({
   plots = [],
   height = '520px',
   className = '',
   showControls = true,
   initialShowKecamatan = true,
-  initialShowDesa = true,
+  initialShowDesa = false,
   selectedPlotId,
   onPlotSelect,
 }: PlotMapViewProps) {
@@ -74,10 +91,39 @@ export function PlotMapView({
   const desaLayerRef = useRef<any>(null)
   const plotsLayerRef = useRef<any>(null)
 
+  // Thematic layers
+  const polaRuangLayerRef = useRef<any>(null)
+  const dasimetrikLongsorLayerRef = useRef<any>(null)
+  const dasimetrikBanjirLayerRef = useRef<any>(null)
+  const riwayatLongsorLayerRef = useRef<any>(null)
+
   const [isMapLoaded, setIsMapLoaded] = useState(false)
   const [currentBasemap, setCurrentBasemap] = useState('satellite')
   const [showKecamatan, setShowKecamatan] = useState(initialShowKecamatan)
   const [showDesa, setShowDesa] = useState(initialShowDesa)
+
+  // Thematic toggles
+  const [showPolaRuang, setShowPolaRuang] = useState(false)
+  const [showDasimetrikLongsor, setShowDasimetrikLongsor] = useState(false)
+  const [showDasimetrikBanjir, setShowDasimetrikBanjir] = useState(false)
+  const [showRiwayatLongsor, setShowRiwayatLongsor] = useState(false)
+  const [isLoadingThematic, setIsLoadingThematic] = useState<string | null>(null)
+
+  // Ensure plot vectors remain on top
+  const reorderLayers = () => {
+    if (showKecamatan && kecamatanLayerRef.current) {
+      kecamatanLayerRef.current.bringToFront()
+    }
+    if (showDesa && desaLayerRef.current) {
+      desaLayerRef.current.bringToFront()
+    }
+    if (showRiwayatLongsor && riwayatLongsorLayerRef.current) {
+      riwayatLongsorLayerRef.current.bringToFront()
+    }
+    if (plotsLayerRef.current) {
+      plotsLayerRef.current.bringToFront()
+    }
+  }
 
   // Render plots vector layer
   const renderPlotsLayer = (L: any, map: any) => {
@@ -227,29 +273,16 @@ export function PlotMapView({
             if (!isCancelled) {
               const kecLayer = L.geoJSON(kecData, {
                 style: {
-                  color: '#f59e0b', // Amber/Gold
-                  weight: 2.5,
-                  dashArray: '6, 6', // Garis putus-putus
+                  color: '#f59e0b',
+                  weight: 2.2,
+                  dashArray: '6, 6',
                   opacity: 0.95,
                   fillColor: '#f59e0b',
-                  fillOpacity: 0.05,
+                  fillOpacity: 0.03,
                 },
                 onEachFeature: (feature, layer) => {
                   const kecName = feature.properties?.KECAMATAN || 'Kecamatan'
                   layer.bindTooltip(`<strong>Kecamatan ${kecName}</strong>`, { sticky: true })
-                  layer.bindPopup(`
-                    <div style="font-family: inherit; padding: 4px;">
-                      <div style="font-size: 10px; font-weight: 700; color: #d97706; text-transform: uppercase;">
-                        Batas Wilayah Administrasi
-                      </div>
-                      <div style="font-size: 13px; font-weight: 700; color: #1e293b; margin-top: 2px;">
-                        Kecamatan ${kecName}
-                      </div>
-                      <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
-                        Kabupaten Banjarnegara
-                      </div>
-                    </div>
-                  `)
                 },
               })
 
@@ -271,30 +304,17 @@ export function PlotMapView({
             if (!isCancelled) {
               const desaLayer = L.geoJSON(desaData, {
                 style: {
-                  color: '#06b6d4', // Cyan
+                  color: '#06b6d4',
                   weight: 1.5,
-                  dashArray: '3, 3', // Garis putus-putus rapat
+                  dashArray: '3, 3',
                   opacity: 0.9,
                   fillColor: '#06b6d4',
-                  fillOpacity: 0.03,
+                  fillOpacity: 0.02,
                 },
                 onEachFeature: (feature, layer) => {
                   const desaName = feature.properties?.DESA || feature.properties?.desa || 'Desa'
                   const kecName = feature.properties?.KECAMATAN || feature.properties?.kecamatan || ''
                   layer.bindTooltip(`<strong>Desa ${desaName}</strong>${kecName ? ` (${kecName})` : ''}`, { sticky: true })
-                  layer.bindPopup(`
-                    <div style="font-family: inherit; padding: 4px;">
-                      <div style="font-size: 10px; font-weight: 700; color: #0284c7; text-transform: uppercase;">
-                        Batas Administrasi Desa
-                      </div>
-                      <div style="font-size: 13px; font-weight: 700; color: #1e293b; margin-top: 2px;">
-                        Desa/Kelurahan ${desaName}
-                      </div>
-                      <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
-                        Kecamatan ${kecName} &bull; Banjarnegara
-                      </div>
-                    </div>
-                  `)
                 },
               })
 
@@ -359,16 +379,7 @@ export function PlotMapView({
       maxZoom: baseConfig.maxZoom,
     }).addTo(map)
 
-    // Bring vector layers to front
-    if (showKecamatan && kecamatanLayerRef.current) {
-      kecamatanLayerRef.current.bringToFront()
-    }
-    if (showDesa && desaLayerRef.current) {
-      desaLayerRef.current.bringToFront()
-    }
-    if (plotsLayerRef.current) {
-      plotsLayerRef.current.bringToFront()
-    }
+    reorderLayers()
   }
 
   // Toggle Kecamatan
@@ -381,8 +392,7 @@ export function PlotMapView({
     if (visible) {
       if (!map.hasLayer(layer)) {
         layer.addTo(map)
-        layer.bringToFront()
-        if (plotsLayerRef.current) plotsLayerRef.current.bringToFront()
+        reorderLayers()
       }
     } else {
       if (map.hasLayer(layer)) {
@@ -401,13 +411,266 @@ export function PlotMapView({
     if (visible) {
       if (!map.hasLayer(layer)) {
         layer.addTo(map)
-        layer.bringToFront()
-        if (plotsLayerRef.current) plotsLayerRef.current.bringToFront()
+        reorderLayers()
       }
     } else {
       if (map.hasLayer(layer)) {
         map.removeLayer(layer)
       }
+    }
+  }
+
+  // Toggle Pola Ruang
+  const handleTogglePolaRuang = async (visible: boolean) => {
+    setShowPolaRuang(visible)
+    const map = mapRef.current
+    if (!map) return
+
+    if (!visible) {
+      if (polaRuangLayerRef.current && map.hasLayer(polaRuangLayerRef.current)) {
+        map.removeLayer(polaRuangLayerRef.current)
+      }
+      return
+    }
+
+    if (polaRuangLayerRef.current) {
+      if (!map.hasLayer(polaRuangLayerRef.current)) {
+        polaRuangLayerRef.current.addTo(map)
+        reorderLayers()
+      }
+      return
+    }
+
+    setIsLoadingThematic('pola-ruang')
+    try {
+      const res = await fetch('/data/thematic/pola-ruang.geojson')
+      if (res.ok) {
+        const data = await res.json()
+        const L = (await import('leaflet')).default
+
+        const layer = L.geoJSON(data, {
+          style: (feature) => {
+            const pr = feature?.properties?.POLA_RUANG || ''
+            const color = POLA_RUANG_COLORS[pr] || '#64748b'
+            return {
+              color: color,
+              weight: 1.0,
+              opacity: 0.8,
+              fillColor: color,
+              fillOpacity: 0.35,
+            }
+          },
+          onEachFeature: (feature, l) => {
+            const pr = feature.properties?.POLA_RUANG || 'Kawasan'
+            l.bindTooltip(`<strong>Pola Ruang:</strong> ${pr}`, { sticky: true })
+          },
+        })
+
+        polaRuangLayerRef.current = layer
+        layer.addTo(map)
+        reorderLayers()
+      }
+    } catch (err) {
+      console.warn('Failed to load Pola Ruang in plot view:', err)
+    } finally {
+      setIsLoadingThematic(null)
+    }
+  }
+
+  // Toggle Dasimetrik Longsor
+  const handleToggleDasimetrikLongsor = async (visible: boolean) => {
+    setShowDasimetrikLongsor(visible)
+    const map = mapRef.current
+    if (!map) return
+
+    if (!visible) {
+      if (dasimetrikLongsorLayerRef.current && map.hasLayer(dasimetrikLongsorLayerRef.current)) {
+        map.removeLayer(dasimetrikLongsorLayerRef.current)
+      }
+      return
+    }
+
+    if (dasimetrikLongsorLayerRef.current) {
+      if (!map.hasLayer(dasimetrikLongsorLayerRef.current)) {
+        dasimetrikLongsorLayerRef.current.addTo(map)
+        reorderLayers()
+      }
+      return
+    }
+
+    setIsLoadingThematic('dasimetrik-longsor')
+    try {
+      const res = await fetch('/data/thematic/dasimetrik-longsor.geojson')
+      if (res.ok) {
+        const data = await res.json()
+        const L = (await import('leaflet')).default
+
+        const layer = L.geoJSON(data, {
+          style: (feature) => {
+            const kls = feature?.properties?.KLS_BENC || 'Sedang'
+            let fillColor = '#f59e0b'
+            let borderColor = '#d97706'
+            let fillOpacity = 0.45
+
+            if (kls === 'Tinggi') {
+              fillColor = '#ef4444'
+              borderColor = '#dc2626'
+              fillOpacity = 0.50
+            } else if (kls === 'Rendah') {
+              fillColor = '#22c55e'
+              borderColor = '#16a34a'
+              fillOpacity = 0.40
+            }
+
+            return {
+              color: borderColor,
+              weight: 0.8,
+              opacity: 0.9,
+              fillColor: fillColor,
+              fillOpacity: fillOpacity,
+            }
+          },
+          onEachFeature: (feature, l) => {
+            const p = feature.properties || {}
+            const desa = p.NAMA_DESA || 'Desa'
+            const kls = p.KLS_BENC || 'Sedang'
+            const jiwa = p.JML_JIWA !== undefined ? Math.round(Number(p.JML_JIWA)) : 0
+            l.bindTooltip(`<strong>Desa ${desa}</strong> (${kls}) &bull; 👥 <strong>${jiwa.toLocaleString()} Jiwa</strong>`, { sticky: true })
+          },
+        })
+
+        dasimetrikLongsorLayerRef.current = layer
+        layer.addTo(map)
+        reorderLayers()
+      }
+    } catch (err) {
+      console.warn('Failed to load Dasimetrik Longsor in plot view:', err)
+    } finally {
+      setIsLoadingThematic(null)
+    }
+  }
+
+  // Toggle Dasimetrik Banjir
+  const handleToggleDasimetrikBanjir = async (visible: boolean) => {
+    setShowDasimetrikBanjir(visible)
+    const map = mapRef.current
+    if (!map) return
+
+    if (!visible) {
+      if (dasimetrikBanjirLayerRef.current && map.hasLayer(dasimetrikBanjirLayerRef.current)) {
+        map.removeLayer(dasimetrikBanjirLayerRef.current)
+      }
+      return
+    }
+
+    if (dasimetrikBanjirLayerRef.current) {
+      if (!map.hasLayer(dasimetrikBanjirLayerRef.current)) {
+        dasimetrikBanjirLayerRef.current.addTo(map)
+        reorderLayers()
+      }
+      return
+    }
+
+    setIsLoadingThematic('dasimetrik-banjir')
+    try {
+      const res = await fetch('/data/thematic/dasimetrik-banjir.geojson')
+      if (res.ok) {
+        const data = await res.json()
+        const L = (await import('leaflet')).default
+
+        const layer = L.geoJSON(data, {
+          style: (feature) => {
+            const kls = feature?.properties?.KLS_BENC || 'Sedang'
+            let color = '#3b82f6'
+            let fillOpacity = 0.45
+
+            if (kls === 'Tinggi') {
+              color = '#1d4ed8'
+              fillOpacity = 0.55
+            } else if (kls === 'Rendah') {
+              color = '#60a5fa'
+              fillOpacity = 0.35
+            }
+
+            return {
+              color: color,
+              weight: 0.8,
+              opacity: 0.9,
+              fillColor: color,
+              fillOpacity: fillOpacity,
+            }
+          },
+          onEachFeature: (feature, l) => {
+            const p = feature.properties || {}
+            const desa = p.NAMA_DESA || 'Desa'
+            const jiwa = p.JML_JIWA !== undefined ? Math.round(Number(p.JML_JIWA)) : 0
+            l.bindTooltip(`<strong>Desa ${desa}</strong> &bull; 👥 <strong>${jiwa.toLocaleString()} Jiwa</strong>`, { sticky: true })
+          },
+        })
+
+        dasimetrikBanjirLayerRef.current = layer
+        layer.addTo(map)
+        reorderLayers()
+      }
+    } catch (err) {
+      console.warn('Failed to load Dasimetrik Banjir in plot view:', err)
+    } finally {
+      setIsLoadingThematic(null)
+    }
+  }
+
+  // Toggle Riwayat Longsor BPBD
+  const handleToggleRiwayatLongsor = async (visible: boolean) => {
+    setShowRiwayatLongsor(visible)
+    const map = mapRef.current
+    if (!map) return
+
+    if (!visible) {
+      if (riwayatLongsorLayerRef.current && map.hasLayer(riwayatLongsorLayerRef.current)) {
+        map.removeLayer(riwayatLongsorLayerRef.current)
+      }
+      return
+    }
+
+    if (riwayatLongsorLayerRef.current) {
+      if (!map.hasLayer(riwayatLongsorLayerRef.current)) {
+        riwayatLongsorLayerRef.current.addTo(map)
+        reorderLayers()
+      }
+      return
+    }
+
+    setIsLoadingThematic('riwayat')
+    try {
+      const res = await fetch('/data/thematic/riwayat-longsor.geojson')
+      if (res.ok) {
+        const data = await res.json()
+        const L = (await import('leaflet')).default
+
+        const layer = L.geoJSON(data, {
+          pointToLayer: (feature, latlng) => {
+            return L.circleMarker(latlng, {
+              radius: 6,
+              color: '#ffffff',
+              weight: 1.5,
+              fillColor: '#dc2626',
+              fillOpacity: 0.9,
+            })
+          },
+          onEachFeature: (feature, l) => {
+            const p = feature.properties
+            l.bindTooltip(`<strong>${p.waktu || 'Kejadian Longsor'}</strong><br/>${p.lokasi || ''}`, { sticky: true })
+          },
+        })
+
+        riwayatLongsorLayerRef.current = layer
+        layer.addTo(map)
+        reorderLayers()
+      }
+    } catch (err) {
+      console.warn('Failed to load Riwayat Longsor in plot view:', err)
+    } finally {
+      setIsLoadingThematic(null)
     }
   }
 
@@ -468,6 +731,15 @@ export function PlotMapView({
           onToggleKecamatan={handleToggleKecamatan}
           showDesa={showDesa}
           onToggleDesa={handleToggleDesa}
+          showPolaRuang={showPolaRuang}
+          onTogglePolaRuang={handleTogglePolaRuang}
+          showDasimetrikLongsor={showDasimetrikLongsor}
+          onToggleDasimetrikLongsor={handleToggleDasimetrikLongsor}
+          showDasimetrikBanjir={showDasimetrikBanjir}
+          onToggleDasimetrikBanjir={handleToggleDasimetrikBanjir}
+          showRiwayatLongsor={showRiwayatLongsor}
+          onToggleRiwayatLongsor={handleToggleRiwayatLongsor}
+          isLoadingThematic={isLoadingThematic}
         />
       )}
     </div>

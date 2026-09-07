@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Trees, AlertCircle } from 'lucide-react'
+import { Trees, AlertCircle, Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -14,6 +14,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -125,11 +126,29 @@ export default function LoginPage() {
 
           <Input
             label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            rightElement={
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  color: 'var(--text-muted)',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                title={showPassword ? 'Sembunyikan password' : 'Lihat password'}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            }
           />
 
           <Button

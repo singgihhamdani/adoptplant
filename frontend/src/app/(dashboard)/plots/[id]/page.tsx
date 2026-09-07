@@ -18,6 +18,10 @@ import {
   MONITORING_STATUS_CONFIG,
 } from '@/lib/constants'
 import {
+  inspectSpatialPoint,
+  type SpatialInspectionResult,
+} from '@/lib/map/spatial-inspector'
+import {
   ArrowLeft,
   MapPin,
   Trees,
@@ -31,6 +35,8 @@ import {
   Sparkles,
   ShieldCheck,
   AlertTriangle,
+  Waves,
+  TreePine,
   History,
   Sprout,
   Wrench,
@@ -72,6 +78,34 @@ export default function PlotDetailPage() {
   const [activeTab, setActiveTab] = useState<'monitoring' | 'satellite' | 'interventions' | 'plantings'>('monitoring')
   const [isInterventionModalOpen, setIsInterventionModalOpen] = useState(false)
   const [isPlantingModalOpen, setIsPlantingModalOpen] = useState(false)
+  const [spatialProfile, setSpatialProfile] = useState<SpatialInspectionResult | null>(null)
+
+  // Calculate spatial profile for the plot polygon centroid
+  React.useEffect(() => {
+    if (!plot?.geom) return
+    let geom = plot.geom
+    if (typeof geom === 'string') {
+      try {
+        geom = JSON.parse(geom)
+      } catch {
+        return
+      }
+    }
+    const coords = geom.coordinates?.[0]
+    if (coords && coords.length > 0) {
+      let sumLng = 0
+      let sumLat = 0
+      for (const pt of coords) {
+        sumLng += pt[0]
+        sumLat += pt[1]
+      }
+      const centroidLng = sumLng / coords.length
+      const centroidLat = sumLat / coords.length
+      inspectSpatialPoint(centroidLng, centroidLat).then((res) => {
+        setSpatialProfile(res)
+      })
+    }
+  }, [plot?.geom])
 
   if (isLoading) {
     return (
@@ -330,6 +364,188 @@ export default function PlotDetailPage() {
             )}
           </Card>
 
+          {/* Contextual Spatial & Eco-DRR Profile Card */}
+          {spatialProfile && (
+            <Card
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.875rem',
+                background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                borderColor: '#cbd5e1',
+                boxShadow: 'var(--shadow-sm)',
+              }}
+            >
+              <div className="flex-between">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <ShieldCheck size={18} style={{ color: 'var(--primary-600)' }} />
+                  <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                    Konteks Spasial & Dampak Eco-DRR
+                  </h4>
+                </div>
+
+                <span
+                  style={{
+                    fontSize: '0.68rem',
+                    fontWeight: 700,
+                    color: '#059669',
+                    background: '#ecfdf5',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    border: '1px solid #a7f3d0',
+                  }}
+                >
+                  PostGIS Analisis
+                </span>
+              </div>
+
+              {/* Grid 1: Wilayah & RTRW */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem' }}>
+                <div
+                  style={{
+                    background: '#ffffff',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--border-subtle)',
+                  }}
+                >
+                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, display: 'block' }}>
+                    Wilayah Administrasi
+                  </span>
+                  <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)', display: 'block', marginTop: '2px' }}>
+                    {spatialProfile.desa ? `Desa ${spatialProfile.desa}` : 'Banjarnegara'}
+                  </strong>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                    {spatialProfile.kecamatan ? `Kec. ${spatialProfile.kecamatan}` : 'Kab. Banjarnegara'}
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    background: '#ffffff',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--border-subtle)',
+                  }}
+                >
+                  <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700, display: 'block' }}>
+                    Pola Ruang (RTRW)
+                  </span>
+                  <strong style={{ fontSize: '0.85rem', color: '#15803d', display: 'block', marginTop: '2px' }}>
+                    {spatialProfile.polaRuang || 'Kawasan Non-Hutan'}
+                  </strong>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                    Zonasi Peruntukan Lahan
+                  </span>
+                </div>
+              </div>
+
+              {/* Grid 2: Dasimetrik Hazard & Exposed Population */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem' }}>
+                <div
+                  style={{
+                    background:
+                      spatialProfile.longsor?.kelas === 'Tinggi'
+                        ? '#fef2f2'
+                        : spatialProfile.longsor?.kelas === 'Sedang'
+                        ? '#fffbeb'
+                        : '#f0fdf4',
+                    border:
+                      spatialProfile.longsor?.kelas === 'Tinggi'
+                        ? '1px solid #fecaca'
+                        : spatialProfile.longsor?.kelas === 'Sedang'
+                        ? '1px solid #fde68a'
+                        : '1px solid #bbf7d0',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: 'var(--radius-sm)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '2px' }}>
+                    <AlertTriangle
+                      size={13}
+                      style={{
+                        color:
+                          spatialProfile.longsor?.kelas === 'Tinggi'
+                            ? '#dc2626'
+                            : spatialProfile.longsor?.kelas === 'Sedang'
+                            ? '#d97706'
+                            : '#16a34a',
+                      }}
+                    />
+                    <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>
+                      Bahaya Longsor
+                    </span>
+                  </div>
+                  <strong
+                    style={{
+                      fontSize: '0.85rem',
+                      display: 'block',
+                      color:
+                        spatialProfile.longsor?.kelas === 'Tinggi'
+                          ? '#991b1b'
+                          : spatialProfile.longsor?.kelas === 'Sedang'
+                          ? '#92400e'
+                          : '#166534',
+                    }}
+                  >
+                    Kelas: {spatialProfile.longsor?.kelas || 'Aman / Rendah'}
+                  </strong>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                    👥 Dampak: <strong>{spatialProfile.longsor?.jiwaTerpapar ? spatialProfile.longsor.jiwaTerpapar.toLocaleString('id-ID') : '0'} Jiwa</strong>
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    background: spatialProfile.banjir ? '#eff6ff' : '#f8fafc',
+                    border: spatialProfile.banjir ? '1px solid #bfdbfe' : '1px solid var(--border-subtle)',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: 'var(--radius-sm)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '2px' }}>
+                    <Waves size={13} style={{ color: spatialProfile.banjir ? '#2563eb' : '#64748b' }} />
+                    <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>
+                      Bahaya Banjir
+                    </span>
+                  </div>
+                  <strong style={{ fontSize: '0.85rem', display: 'block', color: spatialProfile.banjir ? '#1d4ed8' : '#475569' }}>
+                    Kelas: {spatialProfile.banjir?.kelas || 'Aman'}
+                  </strong>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                    👥 Dampak: <strong>{spatialProfile.banjir?.jiwaTerpapar ? spatialProfile.banjir.jiwaTerpapar.toLocaleString('id-ID') : '0'} Jiwa</strong>
+                  </span>
+                </div>
+              </div>
+
+              {/* Riwayat BPBD */}
+              {spatialProfile.riwayatTerdekat && (
+                <div
+                  style={{
+                    background: '#faf5ff',
+                    border: '1px solid #e9d5ff',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '0.5rem 0.75rem',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  <div className="flex-between" style={{ marginBottom: '2px' }}>
+                    <span style={{ fontWeight: 700, color: '#7e22ce', fontSize: '0.68rem', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <History size={12} />
+                      Riwayat Bencana Terdekat BPBD
+                    </span>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#9333ea', background: '#f3e8ff', padding: '1px 4px', borderRadius: '3px' }}>
+                      ~{spatialProfile.riwayatTerdekat.jarakMeter.toLocaleString('id-ID')} m
+                    </span>
+                  </div>
+                  <div style={{ color: '#334155' }}>
+                    {spatialProfile.riwayatTerdekat.title} &bull; {spatialProfile.riwayatTerdekat.lokasi} ({spatialProfile.riwayatTerdekat.waktu})
+                  </div>
+                </div>
+              )}
+            </Card>
+          )}
+
           {/* Quick Action CTA Card */}
           <Card
             style={{
@@ -448,6 +664,9 @@ export default function PlotDetailPage() {
           plotName={plot.name}
           polygonGeoJSON={plot.geom}
           fieldMonitorings={monitorings}
+          baselineDate={plot.baseline_date}
+          plantingDate={(plot as any).planting_date || plot.baseline_date}
+          interventions={interventions}
         />
       )}
 

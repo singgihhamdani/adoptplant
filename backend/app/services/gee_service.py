@@ -19,29 +19,54 @@ def initialize_gee() -> bool:
     if _gee_initialized:
         return True
         
-    email = settings.GEE_SERVICE_ACCOUNT_EMAIL
+    email = settings.GEE_SERVICE_ACCOUNT_EMAIL or "monitorplant-bot@riset-banjarnegara.iam.gserviceaccount.com"
     key_json = settings.GEE_PRIVATE_KEY_JSON
-    project_id = settings.GEE_PROJECT_ID
-    
-    if not email or not key_json:
-        # Check standard Earth Engine user credentials or GCP default credentials
+    project_id = settings.GEE_PROJECT_ID or "riset-banjarnegara"
+
+    # Check if a JSON key file is placed in backend folder
+    default_key_paths = [
+        os.path.join(os.getcwd(), "gee-key.json"),
+        os.path.join(os.getcwd(), "service-account.json"),
+        os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "gee-key.json"),
+    ]
+
+    key_file_found = None
+    if key_json and os.path.exists(key_json):
+        key_file_found = key_json
+    else:
+        for kp in default_key_paths:
+            if os.path.exists(kp):
+                key_file_found = kp
+                break
+
+    if key_file_found:
         try:
-            ee.Initialize()
+            credentials = ee.ServiceAccountCredentials(email, key_file=key_file_found)
+            ee.Initialize(credentials, project=project_id)
             _gee_initialized = True
-            logger.info("Google Earth Engine initialized using default credentials.")
+            logger.info(f"Google Earth Engine initialized using key file: {key_file_found}")
             return True
-        except Exception:
-            logger.warning("GEE credentials not found. Operating in realistic simulation engine mode.")
-            return False
-            
+        except Exception as e:
+            logger.error(f"Failed to initialize GEE with key file {key_file_found}: {e}")
+
+    if key_json and key_json.strip().startswith("{"):
+        try:
+            credentials = ee.ServiceAccountCredentials(email, key_data=key_json)
+            ee.Initialize(credentials, project=project_id)
+            _gee_initialized = True
+            logger.info("Google Earth Engine initialized successfully with Service Account JSON.")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to initialize GEE with key_data: {e}")
+
+    # Fallback to standard local Earth Engine user credentials if available
     try:
-        credentials = ee.ServiceAccountCredentials(email, key_data=key_json)
-        ee.Initialize(credentials, project=project_id if project_id else None)
+        ee.Initialize(project=project_id if project_id else None)
         _gee_initialized = True
-        logger.info("Google Earth Engine initialized successfully with Service Account.")
+        logger.info("Google Earth Engine initialized using default environment credentials.")
         return True
-    except Exception as e:
-        logger.error(f"Failed to initialize GEE: {e}")
+    except Exception:
+        logger.warning("GEE credentials not found or incomplete. Operating in realistic simulation engine mode.")
         return False
 
 

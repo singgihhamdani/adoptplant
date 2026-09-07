@@ -97,9 +97,18 @@ function MonitoringCreateForm() {
   const liveSurvivalRate =
     totalObserved > 0 ? Math.round((h / totalObserved) * 100) : null
 
-  const handleCoordinatesChange = (coords: [number, number], accuracyM: number) => {
+  const [spatialInspection, setSpatialInspection] = useState<any>(null)
+
+  const handleCoordinatesChange = (
+    coords: [number, number],
+    accuracyM: number,
+    inspection?: any
+  ) => {
     setCoordinates(coords)
     setGpsAccuracy(accuracyM)
+    if (inspection) {
+      setSpatialInspection(inspection)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {

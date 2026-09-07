@@ -2,6 +2,7 @@
  * Smart Spatial Inspector Utility
  * Performs fast client-side point-in-polygon and proximity queries
  * across Banjarnegara contextual layers (Administrasi, RTRW, Dasimetrik, BPBD).
+ * Includes Spatial Boundary Guard for Banjarnegara pilot enforcement.
  */
 
 export interface SpatialInspectionResult {
@@ -9,6 +10,7 @@ export interface SpatialInspectionResult {
   desa: string | null
   kecamatan: string | null
   polaRuang: string | null
+  isInsideBanjarnegara: boolean
   longsor: {
     kelas: string
     luasHa: number
@@ -130,6 +132,13 @@ export function preloadSpatialDatasets() {
 }
 
 /**
+ * Quick Bounding Box Spatial Guard for Banjarnegara
+ */
+export function isCoordinateWithinBanjarnegaraBBox(lng: number, lat: number): boolean {
+  return lng >= 109.35 && lng <= 110.05 && lat >= -7.65 && lat <= -7.10
+}
+
+/**
  * Main Spatial Inspection Function
  * Queries all layers for a given [lng, lat] coordinate point.
  */
@@ -153,6 +162,7 @@ export async function inspectSpatialPoint(
     desa: null,
     kecamatan: null,
     polaRuang: null,
+    isInsideBanjarnegara: false,
     longsor: null,
     banjir: null,
     riwayatTerdekat: null,
@@ -238,6 +248,10 @@ export async function inspectSpatialPoint(
       }
     }
   }
+
+  // Set isInsideBanjarnegara spatial guard flag
+  const withinBBox = isCoordinateWithinBanjarnegaraBBox(lng, lat)
+  result.isInsideBanjarnegara = withinBBox && (!!result.desa || !!result.kecamatan || !!result.polaRuang)
 
   return result
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import {
   Satellite,
   TrendingUp,
@@ -10,6 +10,10 @@ import {
   Download,
   TreePine,
   CloudSun,
+  Calendar,
+  Sprout,
+  Info,
+  ShieldAlert,
 } from 'lucide-react'
 import {
   ResponsiveContainer,
@@ -28,53 +32,121 @@ import {
   useAnalyzePlotSatellite,
   SatelliteObservation,
 } from '@/hooks/use-satellite'
-import type { FieldMonitoring } from '@/lib/supabase/types'
+import type { FieldMonitoring, Intervention } from '@/lib/supabase/types'
 
 export interface PlotSatelliteTabProps {
   plotId: string
   plotName: string
   polygonGeoJSON: any
   fieldMonitorings?: FieldMonitoring[]
+  baselineDate?: string
+  plantingDate?: string
+  interventions?: Intervention[]
 }
+
+const TIMEFRAME_OPTIONS = [
+  { label: '1 Thn (12 Bln)', months: 12 },
+  { label: '2 Thn (24 Bln)', months: 24 },
+  { label: '3 Thn (36 Bln) ⭐', months: 36 },
+  { label: '5 Thn (60 Bln)', months: 60 },
+]
 
 export function PlotSatelliteTab({
   plotId,
   plotName,
   polygonGeoJSON,
   fieldMonitorings = [],
+  baselineDate,
+  plantingDate,
+  interventions = [],
 }: PlotSatelliteTabProps) {
-  const { data: satData, isLoading, isFetching } = usePlotSatelliteTimeSeries(plotId)
-  const analyzeMutation = useAnalyzePlotSatellite()
+  const [timeframeMonths, setTimeframeMonths] = useState<number>(36)
   const [selectedMetric, setSelectedMetric] = useState<'ndvi' | 'evi' | 'tree_cover'>('ndvi')
+
+  const effectivePlantingDate = plantingDate || baselineDate || ''
+
+  const { data: satData, isLoading, isFetching } = usePlotSatelliteTimeSeries(
+    plotId,
+    timeframeMonths,
+    effectivePlantingDate
+  )
+  const analyzeMutation = useAnalyzePlotSatellite()
 
   const observations = satData?.observations || []
   const recovery = satData?.recovery
 
-  // Combine satellite data with field monitoring points for dual-source graph
-  const chartData = observations.map((obs) => {
-    const matchingField = fieldMonitorings.find((m) => {
-      return m.date.substring(0, 7) === obs.observation_date.substring(0, 7)
+  // Find formatted display date of planting milestone for Recharts vertical line
+  const plantingDisplayDate = useMemo(() => {
+    if (!effectivePlantingDate || observations.length === 0) return null
+
+    const pDate = new Date(effectivePlantingDate)
+    const pYearMonth = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, '0')}`
+
+    const match = observations.find((obs) => obs.observation_date.startsWith(pYearMonth))
+    if (match) {
+      const d = new Date(match.observation_date)
+      return d.toLocaleDateString('id-ID', { month: 'short', year: '2-digit' })
+    }
+
+    // Fallback: pick the closest date in the array
+    const sorted = [...observations].sort((a, b) => {
+      return Math.abs(new Date(a.observation_date).getTime() - pDate.getTime()) -
+        Math.abs(new Date(b.observation_date).getTime() - pDate.getTime())
     })
 
-    const d = new Date(obs.observation_date)
-    const monthYear = d.toLocaleDateString('id-ID', { month: 'short', year: '2-digit' })
-
-    return {
-      date: obs.observation_date,
-      displayDate: monthYear,
-      ndvi: obs.ndvi,
-      evi: obs.evi || Number((obs.ndvi * 0.75).toFixed(4)),
-      treeCover: obs.tree_cover_pct || Number((obs.ndvi * 105).toFixed(1)),
-      cloudCover: obs.cloud_cover_pct,
-      survivalRate: matchingField?.survival_rate !== undefined && matchingField?.survival_rate !== null ? Number(matchingField.survival_rate) : null,
+    if (sorted.length > 0) {
+      const d = new Date(sorted[0].observation_date)
+      return d.toLocaleDateString('id-ID', { month: 'short', year: '2-digit' })
     }
-  })
+
+    return null
+  }, [effectivePlantingDate, observations])
+
+  // Combine satellite data with field monitoring points and intervention tags
+  const chartData = useMemo(() => {
+    return observations.map((obs) => {
+      const obsMonth = obs.observation_date.substring(0, 7)
+
+      const matchingField = fieldMonitorings.find((m) => {
+        return m.date.substring(0, 7) === obsMonth
+      })
+
+      const matchingIntervention = interventions.find((itv) => {
+        const itvDate = itv.date || (itv as any).action_date || ''
+        return itvDate.substring(0, 7) === obsMonth
+      })
+
+      const d = new Date(obs.observation_date)
+      const monthYear = d.toLocaleDateString('id-ID', { month: 'short', year: '2-digit' })
+
+      const isPostPlanting = effectivePlantingDate
+        ? new Date(obs.observation_date) >= new Date(effectivePlantingDate)
+        : obs.is_post_planting ?? true
+
+      return {
+        date: obs.observation_date,
+        displayDate: monthYear,
+        ndvi: obs.ndvi,
+        evi: obs.evi || Number((obs.ndvi * 0.75).toFixed(4)),
+        treeCover: obs.tree_cover_pct || Number((obs.ndvi * 105).toFixed(1)),
+        cloudCover: obs.cloud_cover_pct,
+        survivalRate:
+          matchingField?.survival_rate !== undefined && matchingField?.survival_rate !== null
+            ? Number(matchingField.survival_rate)
+            : null,
+        intervention: matchingIntervention?.type || (matchingIntervention as any)?.intervention_type || null,
+        isPostPlanting,
+      }
+    })
+  }, [observations, fieldMonitorings, interventions, effectivePlantingDate])
 
   const handleTriggerAnalysis = () => {
     if (!polygonGeoJSON) return
     analyzeMutation.mutate({
       plotId,
       polygonGeoJSON,
+      timeframeMonths,
+      plantingDate: effectivePlantingDate,
     })
   }
 
@@ -98,7 +170,7 @@ export function PlotSatelliteTab({
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
               <span
                 style={{
                   padding: '4px 8px',
@@ -129,6 +201,26 @@ export function PlotSatelliteTab({
               >
                 Cloud Masked (QA60/SCL)
               </span>
+
+              {effectivePlantingDate && (
+                <span
+                  style={{
+                    padding: '4px 8px',
+                    borderRadius: 'var(--radius-sm)',
+                    background: '#fefce8',
+                    color: '#854d0e',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    border: '1px solid #fef08a',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                  }}
+                >
+                  <Sprout size={13} style={{ color: '#65a30d' }} />
+                  Tanam: {new Date(effectivePlantingDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </span>
+              )}
             </div>
 
             <h3 style={{ fontSize: '1.25rem', margin: '0 0 0.25rem 0', color: 'var(--text-primary)' }}>
@@ -250,63 +342,121 @@ export function PlotSatelliteTab({
               Kurva Trajektori Pertumbuhan Vegetasi (Temporal Time Series)
             </h4>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
-              Menampilkan evolusi kerapatan vegetasi bulanan sejak inisiasi plot penanaman.
+              Menampilkan evolusi kerapatan vegetasi bulanan dengan batas penanda hari penanaman.
             </p>
           </div>
 
-          {/* Metric Selector Pills */}
-          <div style={{ display: 'flex', background: 'var(--bg-surface-subtle)', padding: '3px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-            <button
-              onClick={() => setSelectedMetric('ndvi')}
-              type="button"
-              style={{
-                padding: '4px 12px',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                borderRadius: 'var(--radius-sm)',
-                border: 'none',
-                cursor: 'pointer',
-                background: selectedMetric === 'ndvi' ? '#ffffff' : 'transparent',
-                color: selectedMetric === 'ndvi' ? 'var(--primary-700)' : 'var(--text-secondary)',
-                boxShadow: selectedMetric === 'ndvi' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-              }}
-            >
-              NDVI (Vegetasi)
-            </button>
-            <button
-              onClick={() => setSelectedMetric('evi')}
-              type="button"
-              style={{
-                padding: '4px 12px',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                borderRadius: 'var(--radius-sm)',
-                border: 'none',
-                cursor: 'pointer',
-                background: selectedMetric === 'evi' ? '#ffffff' : 'transparent',
-                color: selectedMetric === 'evi' ? 'var(--primary-700)' : 'var(--text-secondary)',
-                boxShadow: selectedMetric === 'evi' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-              }}
-            >
-              EVI (Kanopi)
-            </button>
-            <button
-              onClick={() => setSelectedMetric('tree_cover')}
-              type="button"
-              style={{
-                padding: '4px 12px',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                borderRadius: 'var(--radius-sm)',
-                border: 'none',
-                cursor: 'pointer',
-                background: selectedMetric === 'tree_cover' ? '#ffffff' : 'transparent',
-                color: selectedMetric === 'tree_cover' ? 'var(--primary-700)' : 'var(--text-secondary)',
-                boxShadow: selectedMetric === 'tree_cover' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-              }}
-            >
-              % Tutupan Pohon
-            </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            {/* Timeframe Selector */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', background: '#f8fafc', padding: '3px 6px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginRight: '2px' }}>
+                Rentang:
+              </span>
+              {TIMEFRAME_OPTIONS.map((opt) => (
+                <button
+                  key={opt.months}
+                  type="button"
+                  onClick={() => setTimeframeMonths(opt.months)}
+                  style={{
+                    padding: '3px 8px',
+                    fontSize: '0.72rem',
+                    fontWeight: timeframeMonths === opt.months ? 700 : 500,
+                    borderRadius: 'var(--radius-sm)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: timeframeMonths === opt.months ? 'var(--primary-600)' : 'transparent',
+                    color: timeframeMonths === opt.months ? '#ffffff' : 'var(--text-secondary)',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Metric Selector Pills */}
+            <div style={{ display: 'flex', background: 'var(--bg-surface-subtle)', padding: '3px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+              <button
+                onClick={() => setSelectedMetric('ndvi')}
+                type="button"
+                style={{
+                  padding: '4px 10px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  borderRadius: 'var(--radius-sm)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  background: selectedMetric === 'ndvi' ? '#ffffff' : 'transparent',
+                  color: selectedMetric === 'ndvi' ? 'var(--primary-700)' : 'var(--text-secondary)',
+                  boxShadow: selectedMetric === 'ndvi' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                }}
+              >
+                NDVI (Vegetasi)
+              </button>
+              <button
+                onClick={() => setSelectedMetric('evi')}
+                type="button"
+                style={{
+                  padding: '4px 10px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  borderRadius: 'var(--radius-sm)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  background: selectedMetric === 'evi' ? '#ffffff' : 'transparent',
+                  color: selectedMetric === 'evi' ? 'var(--primary-700)' : 'var(--text-secondary)',
+                  boxShadow: selectedMetric === 'evi' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                }}
+              >
+                EVI (Kanopi)
+              </button>
+              <button
+                onClick={() => setSelectedMetric('tree_cover')}
+                type="button"
+                style={{
+                  padding: '4px 10px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  borderRadius: 'var(--radius-sm)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  background: selectedMetric === 'tree_cover' ? '#ffffff' : 'transparent',
+                  color: selectedMetric === 'tree_cover' ? 'var(--primary-700)' : 'var(--text-secondary)',
+                  boxShadow: selectedMetric === 'tree_cover' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                }}
+              >
+                % Tutupan Pohon
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Phase Indicator Legend */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1.25rem',
+            marginBottom: '0.75rem',
+            padding: '0.4rem 0.75rem',
+            borderRadius: 'var(--radius-sm)',
+            background: 'var(--bg-surface-subtle)',
+            fontSize: '0.75rem',
+            flexWrap: 'wrap',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <span style={{ width: '12px', height: '3px', background: '#94a3b8', display: 'inline-block' }} />
+            <span style={{ color: 'var(--text-muted)' }}>
+              <strong>Kiri Garis Hijau:</strong> Kondisi Pra-Penanaman (Baseline Lahan Terdegradasi)
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <span style={{ width: '12px', height: '3px', background: '#10b981', display: 'inline-block' }} />
+            <span style={{ color: '#047857' }}>
+              <strong>Kanan Garis Hijau:</strong> Bukti Pertumbuhan Pohon Pasca-Penanaman
+            </span>
           </div>
         </div>
 
@@ -314,7 +464,7 @@ export function PlotSatelliteTab({
         <div style={{ width: '100%', height: '340px', position: 'relative' }}>
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 10, right: 30, left: -10, bottom: 0 }}>
+              <AreaChart data={chartData} margin={{ top: 20, right: 30, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="ndviGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
@@ -352,9 +502,25 @@ export function PlotSatelliteTab({
                             fontSize: '12px',
                           }}
                         >
-                          <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: '6px' }}>
+                          <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
                             📅 Periode: {data.date}
                           </div>
+
+                          <div
+                            style={{
+                              display: 'inline-block',
+                              fontSize: '10.5px',
+                              fontWeight: 700,
+                              padding: '1px 6px',
+                              borderRadius: '3px',
+                              marginBottom: '6px',
+                              background: data.isPostPlanting ? '#dcfce7' : '#f1f5f9',
+                              color: data.isPostPlanting ? '#15803d' : '#64748b',
+                            }}
+                          >
+                            {data.isPostPlanting ? '🌱 Pasca-Penanaman (Pemulihan)' : '⏳ Pra-Penanaman (Kondisi Awal)'}
+                          </div>
+
                           <div style={{ color: '#059669', fontWeight: 600 }}>
                             🌿 NDVI Vegetasi: <strong>{data.ndvi}</strong>
                           </div>
@@ -364,9 +530,16 @@ export function PlotSatelliteTab({
                           <div style={{ color: '#166534', marginTop: '2px' }}>
                             🌳 Estimasi Tutupan: <strong>{data.treeCover}%</strong>
                           </div>
+
                           {data.survivalRate !== null && (
                             <div style={{ color: '#d97706', fontWeight: 700, marginTop: '4px', borderTop: '1px solid #e2e8f0', paddingTop: '4px' }}>
                               📍 Survival Rate Lapangan: <strong>{data.survivalRate}%</strong>
+                            </div>
+                          )}
+
+                          {data.intervention && (
+                            <div style={{ color: '#7e22ce', fontWeight: 700, marginTop: '4px' }}>
+                              🛠️ Intervensi: <strong>{data.intervention}</strong>
                             </div>
                           )}
                         </div>
@@ -376,7 +549,7 @@ export function PlotSatelliteTab({
                   }}
                 />
 
-                {/* Baseline reference line */}
+                {/* Horizontal Baseline reference line */}
                 {recovery?.baseline_ndvi && (
                   <ReferenceLine
                     y={selectedMetric === 'tree_cover' ? recovery.baseline_ndvi * 105 : recovery.baseline_ndvi}
@@ -391,6 +564,23 @@ export function PlotSatelliteTab({
                   />
                 )}
 
+                {/* Vertical Planting Date Milestone Marker Line */}
+                {plantingDisplayDate && (
+                  <ReferenceLine
+                    x={plantingDisplayDate}
+                    stroke="#059669"
+                    strokeWidth={2.2}
+                    strokeDasharray="4 4"
+                    label={{
+                      value: '🌱 Hari Penanaman',
+                      position: 'top',
+                      fill: '#047857',
+                      fontSize: 11,
+                      fontWeight: 700,
+                    }}
+                  />
+                )}
+
                 {/* Main Data Area */}
                 <Area
                   type="monotone"
@@ -398,128 +588,39 @@ export function PlotSatelliteTab({
                   stroke={selectedMetric === 'ndvi' ? '#059669' : selectedMetric === 'evi' ? '#0284c7' : '#166534'}
                   strokeWidth={2.5}
                   fillOpacity={1}
-                  fill={selectedMetric === 'evi' ? 'url(#eviGradient)' : 'url(#ndviGradient)'}
+                  fill={selectedMetric === 'ndvi' ? 'url(#ndviGradient)' : 'url(#eviGradient)'}
                 />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)' }}>
-              Memuat data time series satelit...
+              {isLoading ? 'Mengambil data satelit Sentinel-2...' : 'Belum ada data observasi satelit.'}
             </div>
           )}
         </div>
 
-        {/* Interpretation Note */}
-        <div
-          style={{
-            marginTop: '1rem',
-            padding: '0.75rem 1rem',
-            borderRadius: 'var(--radius-sm)',
-            background: statusBadgeBg,
-            border: `1px solid ${statusBorder}`,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.625rem',
-            fontSize: '0.8rem',
-            color: statusBadgeColor,
-          }}
-        >
-          <Sparkles size={18} style={{ flexShrink: 0 }} />
-          <span>
-            <strong>Interpretasi Analitis:</strong> {recovery?.interpretation || 'Vegetasi terpantau konsisten.'}
-          </span>
-        </div>
-      </Card>
-
-      {/* 4. Multi-Source Evidence Table */}
-      <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <div>
-            <h4 style={{ fontSize: '1rem', fontWeight: 700, margin: '0 0 0.2rem 0', color: 'var(--text-primary)' }}>
-              Tabel Rekam Jejak Observasi Satelit Sentinel-2
-            </h4>
-            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-              {observations.length} observasi temporal terdaftar
+        {/* Interpretasi Analitis */}
+        {recovery?.interpretation && (
+          <div
+            style={{
+              marginTop: '1rem',
+              padding: '0.75rem 1rem',
+              borderRadius: 'var(--radius-sm)',
+              background: '#f0fdf4',
+              border: '1px solid #bbf7d0',
+              fontSize: '0.825rem',
+              color: '#166534',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
+            <Sparkles size={16} style={{ color: '#16a34a', flexShrink: 0 }} />
+            <span>
+              <strong>Interpretasi Analitis:</strong> {recovery.interpretation}
             </span>
           </div>
-
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              const headers = ['Tanggal', 'NDVI', 'EVI', 'NDMI', 'Tutupan Pohon (%)', 'Piksel Valid (%)', 'Kualitas']
-              const rows = observations.map((o) => [
-                o.observation_date,
-                o.ndvi,
-                o.evi || '-',
-                o.ndmi || '-',
-                o.tree_cover_pct || '-',
-                o.valid_pixel_pct,
-                o.quality_flag,
-              ])
-              const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n')
-              const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-              const url = URL.createObjectURL(blob)
-              const a = document.createElement('a')
-              a.href = url
-              a.download = `satellite_observations_${plotName.replace(/\s+/g, '_')}.csv`
-              a.click()
-            }}
-            icon={<Download size={13} />}
-          >
-            Export CSV
-          </Button>
-        </div>
-
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-subtle)' }}>
-                <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)' }}>Tanggal Observasi</th>
-                <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)' }}>NDVI (Vegetasi)</th>
-                <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)' }}>EVI (Kanopi)</th>
-                <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)' }}>Tutupan Kanopi</th>
-                <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)' }}>Piksel Valid</th>
-                <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)' }}>Kualitas</th>
-              </tr>
-            </thead>
-            <tbody>
-              {observations.slice(-8).reverse().map((obs, idx) => (
-                <tr key={idx} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                  <td style={{ padding: '8px 12px', color: 'var(--text-primary)', fontWeight: 500 }}>
-                    {obs.observation_date}
-                  </td>
-                  <td style={{ padding: '8px 12px', color: '#059669', fontWeight: 700 }}>
-                    {obs.ndvi}
-                  </td>
-                  <td style={{ padding: '8px 12px', color: '#0284c7' }}>
-                    {obs.evi || '-'}
-                  </td>
-                  <td style={{ padding: '8px 12px', color: 'var(--text-secondary)' }}>
-                    {obs.tree_cover_pct}%
-                  </td>
-                  <td style={{ padding: '8px 12px', color: 'var(--text-secondary)' }}>
-                    {obs.valid_pixel_pct}%
-                  </td>
-                  <td style={{ padding: '8px 12px' }}>
-                    <span
-                      style={{
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        fontSize: '0.7rem',
-                        fontWeight: 600,
-                        background: obs.quality_flag === 'HIGH' ? '#dcfce7' : '#fef3c7',
-                        color: obs.quality_flag === 'HIGH' ? '#15803d' : '#92400e',
-                      }}
-                    >
-                      {obs.quality_flag}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        )}
       </Card>
     </div>
   )
