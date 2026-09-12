@@ -6,7 +6,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { usePlots, usePlot } from '@/hooks/use-plots'
 import { useProjects } from '@/hooks/use-projects'
-import { useCreateMonitoring, type CreateMonitoringPayload } from '@/hooks/use-monitoring'
+import { useCreateMonitoringOfflineAware, type CreateMonitoringPayload } from '@/hooks/use-monitoring'
 import { PhotoUploader, type UploadedPhotoItem } from '@/components/monitoring/photo-uploader'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -24,6 +24,7 @@ import {
   Image as ImageIcon,
   Trees,
   Info,
+  WifiOff,
 } from 'lucide-react'
 
 const GPSPicker = dynamic(
@@ -58,7 +59,22 @@ function MonitoringCreateForm() {
   const { data: plots = [], isLoading: isLoadingPlots } = usePlots()
   const [selectedPlotId, setSelectedPlotId] = useState(preselectedPlotId)
   const { data: selectedPlot } = usePlot(selectedPlotId)
-  const createMonitoringMutation = useCreateMonitoring()
+  const createMonitoringMutation = useCreateMonitoringOfflineAware()
+  const [isOnline, setIsOnline] = useState(true)
+
+  useEffect(() => {
+    setIsOnline(typeof navigator !== 'undefined' ? navigator.onLine : true)
+    const handleOnline = () => setIsOnline(true)
+    const handleOffline = () => setIsOnline(false)
+
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
 
   // Form State
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
@@ -156,8 +172,12 @@ function MonitoringCreateForm() {
         })),
       }
 
-      await createMonitoringMutation.mutateAsync(payload)
-      router.push(`/plots/${selectedPlotId}`)
+      const res = await createMonitoringMutation.mutateAsync(payload)
+      if (res.isOffline) {
+        router.push('/monitoring?offlineSaved=1')
+      } else {
+        router.push(`/plots/${selectedPlotId}`)
+      }
     } catch (err: any) {
       console.error('Submit monitoring error:', err)
       setFormError(err?.message || 'Gagal menyimpan data monitoring. Silakan coba lagi.')
@@ -166,6 +186,29 @@ function MonitoringCreateForm() {
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      {/* Offline Alert Banner */}
+      {!isOnline && (
+        <div
+          style={{
+            padding: '0.85rem 1.25rem',
+            borderRadius: 'var(--radius-md)',
+            background: '#fffbeb',
+            border: '1px solid #fde68a',
+            color: '#92400e',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            fontSize: '0.875rem',
+          }}
+        >
+          <WifiOff size={18} style={{ color: '#d97706', flexShrink: 0 }} />
+          <div>
+            <strong>Mode Lapangan Offline Aktif:</strong> Perangkat tidak terhubung ke internet.
+            Laporan monitoring dan foto akan disimpan secara aman di memori perangkat (IndexedDB) dan siap disinkronkan saat kembali online.
+          </div>
+        </div>
+      )}
+
       {/* Top Action Bar */}
       <div className="flex-between">
         <Link

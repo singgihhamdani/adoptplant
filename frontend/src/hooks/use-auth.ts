@@ -90,10 +90,32 @@ export function useAuth() {
     router.push('/login')
   }
 
+  const resetPasswordForEmail = async (email: string, redirectTo?: string) => {
+    const defaultRedirect =
+      typeof window !== 'undefined'
+        ? `${window.location.origin}/auth/callback?next=/reset-password`
+        : undefined
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectTo || defaultRedirect,
+    })
+    if (error) throw error
+    return data
+  }
+
+  const updatePassword = async (newPassword: string) => {
+    const { data, error } = await supabase.auth.updateUser({
+      password: newPassword,
+    })
+    if (error) throw error
+    return data
+  }
+
   return {
     user,
     isLoading,
     isAuthenticated: !!user,
     signOut,
+    resetPasswordForEmail,
+    updatePassword,
   }
 }

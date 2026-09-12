@@ -1,10 +1,17 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import Link from 'next/link'
-import { useMonitorings } from '@/hooks/use-monitoring'
+import { useSearchParams } from 'next/navigation'
+import {
+  useMonitorings,
+  usePendingOfflineMonitorings,
+  useSyncMonitorings,
+  useDeleteOfflineMonitoringMutation,
+} from '@/hooks/use-monitoring'
 import { useProjects } from '@/hooks/use-projects'
 import { usePlots } from '@/hooks/use-plots'
+import { exportMonitoringsToCSV } from '@/lib/csv-export'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { StatusBadge, Badge } from '@/components/ui/badge'
@@ -23,12 +30,23 @@ import {
   TrendingUp,
   ArrowUpRight,
   ShieldAlert,
+  Download,
+  RefreshCw,
+  Trash2,
+  WifiOff,
 } from 'lucide-react'
 
-export default function MonitoringListPage() {
+function MonitoringListPageContent() {
+  const searchParams = useSearchParams()
+  const justSavedOffline = searchParams.get('offlineSaved') === '1'
+
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [selectedPlotId, setSelectedPlotId] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
+
+  const pendingOffline = usePendingOfflineMonitorings()
+  const syncMutation = useSyncMonitorings()
+  const deleteOfflineMutation = useDeleteOfflineMonitoringMutation()
 
   const { data: projects = [] } = useProjects()
   const { data: plots = [] } = usePlots({ projectId: selectedProjectId || undefined })
@@ -84,12 +102,135 @@ export default function MonitoringListPage() {
           </p>
         </div>
 
-        <Link href="/monitoring/new">
-          <Button variant="primary" icon={<Plus size={16} />}>
-            Input Monitoring Baru
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <Button
+            variant="secondary"
+            icon={<Download size={16} />}
+            onClick={() => exportMonitoringsToCSV(monitorings)}
+            disabled={monitorings.length === 0}
+            title="Unduh seluruh data monitoring dalam format CSV"
+          >
+            Ekspor CSV
           </Button>
-        </Link>
+          <Link href="/monitoring/new">
+            <Button variant="primary" icon={<Plus size={16} />}>
+              Input Monitoring Baru
+            </Button>
+          </Link>
+        </div>
       </div>
+
+      {/* Just Saved Offline Banner */}
+      {justSavedOffline && (
+        <div
+          style={{
+            padding: '0.85rem 1.25rem',
+            borderRadius: 'var(--radius-md)',
+            background: '#ecfdf5',
+            border: '1px solid #a7f3d0',
+            color: '#065f46',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            fontSize: '0.875rem',
+          }}
+        >
+          <CheckCircle2 size={18} style={{ color: '#059669', flexShrink: 0 }} />
+          <div>
+            <strong>Laporan Berhasil Disimpan Lokal:</strong> Data monitoring & foto tersimpan di memori perangkat. Data akan otomatis disinkronkan ke server saat koneksi internet aktif.
+          </div>
+        </div>
+      )}
+
+      {/* Offline Pending Queue Card */}
+      {pendingOffline.length > 0 && (
+        <Card
+          style={{
+            padding: '1.25rem',
+            background: '#fffbeb',
+            borderColor: '#fde68a',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '0.75rem',
+              flexWrap: 'wrap',
+              gap: '0.5rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <WifiOff size={18} style={{ color: '#d97706' }} />
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: '#92400e', margin: 0 }}>
+                {pendingOffline.length} Laporan Tersimpan di Perangkat (Menunggu Sinkronisasi)
+              </h3>
+            </div>
+            <Button
+              variant="primary"
+              size="sm"
+              isLoading={syncMutation.isPending}
+              icon={<RefreshCw size={14} />}
+              onClick={() => syncMutation.mutate()}
+            >
+              Sinkronkan Sekarang
+            </Button>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {pendingOffline.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '0.65rem 0.85rem',
+                  background: '#ffffff',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid #fef3c7',
+                  fontSize: '0.825rem',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                  <strong style={{ color: 'var(--text-primary)' }}>{item.plot_name}</strong>
+                  <span style={{ color: 'var(--text-muted)' }}>{item.date}</span>
+                  <Badge variant={item.sync_status === 'FAILED' ? 'danger' : 'warning'}>
+                    {item.sync_status === 'FAILED'
+                      ? 'Gagal Sync'
+                      : item.sync_status === 'SYNCING'
+                      ? 'Sedang Sync'
+                      : 'Menunggu Online'}
+                  </Badge>
+                  <span style={{ color: 'var(--text-muted)' }}>
+                    {item.photo_count} foto &bull; {item.healthy_count} bibit sehat ({item.survival_rate ?? 0}%)
+                  </span>
+                  {item.sync_error && (
+                    <span style={{ color: 'var(--status-at-risk)', fontSize: '0.75rem' }}>
+                      ({item.sync_error})
+                    </span>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => deleteOfflineMutation.mutate(item.id)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    padding: '4px',
+                  }}
+                  title="Hapus dari antrean lokal"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {/* Stats Summary */}
       <div
@@ -456,3 +597,12 @@ export default function MonitoringListPage() {
     </div>
   )
 }
+
+export default function MonitoringListPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>Memuat data monitoring...</div>}>
+      <MonitoringListPageContent />
+    </Suspense>
+  )
+}
+

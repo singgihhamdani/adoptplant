@@ -21,7 +21,9 @@ import {
   Calendar,
   Layers,
   Sparkles,
+  Download,
 } from 'lucide-react'
+import { exportPlotsToCSV } from '@/lib/csv-export'
 
 const PlotMapView = dynamic(
   () => import('@/components/map/plot-map-view').then((mod) => mod.PlotMapView),
@@ -103,6 +105,16 @@ export default function OverviewPage() {
         </div>
 
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<Download size={15} />}
+            onClick={() => exportPlotsToCSV(plots)}
+            disabled={plots.length === 0}
+            title="Unduh ringkasan data seluruh plot lahan dalam format CSV"
+          >
+            Ekspor Plot CSV
+          </Button>
           <Link href="/projects/new">
             <Button variant="secondary" size="sm" icon={<Plus size={15} />}>
               Proyek Baru

@@ -246,6 +246,14 @@ export function useCreateMonitoring() {
   })
 }
 
+import { useLiveQuery } from 'dexie-react-hooks'
+import { db, type OfflineMonitoring } from '@/lib/offline/db'
+import {
+  saveMonitoringOffline,
+  syncPendingMonitorings,
+  deleteOfflineMonitoring,
+} from '@/lib/offline/sync-engine'
+
 export function useDeleteMonitoring() {
   const queryClient = useQueryClient()
   const supabase = createClient()
@@ -263,3 +271,177 @@ export function useDeleteMonitoring() {
     },
   })
 }
+
+/**
+ * Offline-aware create monitoring mutation.
+ * Automatically saves to IndexedDB if browser is offline or on network failure.
+ */
+export function useCreateMonitoringOfflineAware() {
+  const queryClient = useQueryClient()
+  const supabase = createClient()
+
+  return useMutation({
+    mutationFn: async (payload: CreateMonitoringPayload): Promise<{ isOffline: boolean; id: string }> => {
+      const isCurrentlyOffline = typeof window !== 'undefined' && !navigator.onLine
+
+      if (isCurrentlyOffline) {
+        const offlineId = await saveMonitoringOffline(payload)
+        return { isOffline: true, id: offlineId }
+      }
+
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+
+        if (!user) {
+          const offlineId = await saveMonitoringOffline(payload)
+          return { isOffline: true, id: offlineId }
+        }
+
+        const geomGeoJSON = {
+          type: 'Point',
+          coordinates: payload.coordinates,
+        }
+
+        const monitoringInsertData: any = {
+          plot_id: payload.plot_id,
+          date: payload.date,
+          geom: geomGeoJSON,
+          gps_accuracy_m: payload.gps_accuracy_m || 10.0,
+          healthy_count: payload.healthy_count,
+          stressed_count: payload.stressed_count,
+          dead_count: payload.dead_count,
+          missing_count: payload.missing_count,
+          avg_height_cm: payload.avg_height_cm || null,
+          avg_diameter_cm: payload.avg_diameter_cm || null,
+          canopy_cover_pct: payload.canopy_cover_pct || null,
+          notes: payload.notes || null,
+          observer_id: user.id,
+          sync_status: 'SYNCED',
+          synced_at: new Date().toISOString(),
+        }
+
+        const { data: monitoring, error: monitoringError } = await supabase
+          .from('field_monitorings')
+          .insert(monitoringInsertData)
+          .select()
+          .single()
+
+        if (monitoringError) throw monitoringError
+
+        const monitoringId = (monitoring as any).id
+
+        if (payload.photos && payload.photos.length > 0) {
+          for (let i = 0; i < payload.photos.length; i++) {
+            const photoItem = payload.photos[i]
+            const file = photoItem.file
+            const fileExt = file.name.split('.').pop() || 'jpg'
+            const filePath = `monitoring/${monitoringId}/${Date.now()}_${i}.${fileExt}`
+
+            try {
+              const { error: uploadError } = await supabase.storage
+                .from('monitoring-photos')
+                .upload(filePath, file, {
+                  cacheControl: '3600',
+                  upsert: true,
+                })
+
+              let photoUrl = filePath
+              if (!uploadError) {
+                const { data: publicUrlData } = supabase.storage
+                  .from('monitoring-photos')
+                  .getPublicUrl(filePath)
+                photoUrl = publicUrlData.publicUrl
+              }
+
+              await supabase.from('photos').insert({
+                monitoring_id: monitoringId,
+                url: photoUrl,
+                caption: photoItem.caption || null,
+                taken_at: new Date().toISOString(),
+                exif_lat: payload.coordinates[1],
+                exif_lon: payload.coordinates[0],
+                file_size_bytes: photoItem.file_size_bytes || file.size,
+              } as any)
+            } catch (photoErr) {
+              console.warn('Photo upload fallback warning:', photoErr)
+            }
+          }
+        }
+
+        return { isOffline: false, id: monitoringId }
+      } catch (err: any) {
+        console.warn('Online submission failed, falling back to offline storage:', err)
+        const offlineId = await saveMonitoringOffline(payload)
+        return { isOffline: true, id: offlineId }
+      }
+    },
+    onSuccess: (result, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['monitorings'] })
+      queryClient.invalidateQueries({ queryKey: ['plots'] })
+      queryClient.invalidateQueries({ queryKey: ['plot', variables.plot_id] })
+      queryClient.invalidateQueries({ queryKey: ['overview'] })
+    },
+  })
+}
+
+/**
+ * Hook to retrieve all offline monitorings awaiting synchronization
+ */
+export function usePendingOfflineMonitorings(): OfflineMonitoring[] {
+  const items = useLiveQuery(
+    () =>
+      db.offlineMonitorings
+        .where('sync_status')
+        .anyOf(['PENDING', 'FAILED', 'SYNCING'])
+        .reverse()
+        .sortBy('created_at'),
+    [],
+    []
+  )
+  return items || []
+}
+
+/**
+ * Hook to get real-time pending sync count
+ */
+export function useOfflinePendingCount(): number {
+  const count = useLiveQuery(
+    () => db.offlineMonitorings.where('sync_status').anyOf(['PENDING', 'FAILED']).count(),
+    [],
+    0
+  )
+  return count ?? 0
+}
+
+/**
+ * Hook to manually or automatically trigger synchronization
+ */
+export function useSyncMonitorings() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async () => {
+      return await syncPendingMonitorings()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['monitorings'] })
+      queryClient.invalidateQueries({ queryKey: ['plots'] })
+      queryClient.invalidateQueries({ queryKey: ['overview'] })
+    },
+  })
+}
+
+/**
+ * Hook to delete an offline monitoring from IndexedDB
+ */
+export function useDeleteOfflineMonitoringMutation() {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await deleteOfflineMonitoring(id)
+      return id
+    },
+  })
+}
+

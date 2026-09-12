@@ -18,6 +18,8 @@ export interface PlotWithProject extends Plot {
   latest_monitoring?: FieldMonitoring[]
 }
 
+import { cachePlots, getCachedPlots, getCachedPlot } from '@/lib/offline/cache-manager'
+
 export interface PlotFilters {
   projectId?: string
   status?: string
@@ -30,31 +32,51 @@ export function usePlots(filters?: PlotFilters) {
   return useQuery<PlotWithProject[]>({
     queryKey: ['plots', filters],
     queryFn: async () => {
-      let query = supabase
-        .from('plots')
-        .select(`
-          *,
-          project:projects(id, name, location_name, province),
-          monitorings:field_monitorings(count)
-        `)
-        .order('created_at', { ascending: false })
-
-      if (filters?.projectId) {
-        query = query.eq('project_id', filters.projectId)
+      // If offline, directly return cached plots
+      if (typeof window !== 'undefined' && !navigator.onLine) {
+        const cached = await getCachedPlots(filters?.projectId)
+        return (cached as unknown as PlotWithProject[]) || []
       }
 
-      if (filters?.status) {
-        query = query.eq('monitoring_status', filters.status as any)
+      try {
+        let query = supabase
+          .from('plots')
+          .select(`
+            *,
+            project:projects(id, name, location_name, province),
+            monitorings:field_monitorings(count)
+          `)
+          .order('created_at', { ascending: false })
+
+        if (filters?.projectId) {
+          query = query.eq('project_id', filters.projectId)
+        }
+
+        if (filters?.status) {
+          query = query.eq('monitoring_status', filters.status as any)
+        }
+
+        if (filters?.search) {
+          query = query.ilike('name', `%${filters.search}%`)
+        }
+
+        const { data, error } = await query
+
+        if (error) throw error
+
+        const results = (data as unknown as PlotWithProject[]) || []
+        // Cache fetched plots in IndexedDB asynchronously
+        cachePlots(results).catch(() => {})
+
+        return results
+      } catch (err) {
+        // Fallback to offline cache on network error
+        const cached = await getCachedPlots(filters?.projectId)
+        if (cached && cached.length > 0) {
+          return cached as unknown as PlotWithProject[]
+        }
+        throw err
       }
-
-      if (filters?.search) {
-        query = query.ilike('name', `%${filters.search}%`)
-      }
-
-      const { data, error } = await query
-
-      if (error) throw error
-      return (data as unknown as PlotWithProject[]) || []
     },
   })
 }

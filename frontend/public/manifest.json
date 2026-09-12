@@ -1,16 +1,58 @@
 {
-  "name": "REHABTRACK — Monitoring Lahan",
+  "name": "REHABTRACK — Platform Monitoring & Evaluasi Pemulihan Lahan",
   "short_name": "REHABTRACK",
-  "description": "Dari aksi penanaman menuju bukti pemulihan.",
-  "start_url": "/",
+  "description": "Platform monitoring & evaluasi pemulihan lahan berbasis geotagging, time series, dan citra satelit.",
+  "start_url": "/overview",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#090d16",
-  "theme_color": "#10b981",
+  "orientation": "portrait-primary",
+  "background_color": "#064e3b",
+  "theme_color": "#059669",
+  "lang": "id",
+  "dir": "ltr",
+  "categories": [
+    "productivity",
+    "utilities",
+    "government"
+  ],
   "icons": [
     {
       "src": "/favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/x-icon",
+      "purpose": "any"
+    },
+    {
+      "src": "/globe.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/window.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Input Monitoring Lapangan",
+      "short_name": "Monitoring",
+      "description": "Catat pengamatan bibit dan foto geotagged baru",
+      "url": "/monitoring/new"
+    },
+    {
+      "name": "Daftar Plot Lahan",
+      "short_name": "Plot Lahan",
+      "description": "Lihat status pemulihan plot rehabilitasi",
+      "url": "/plots"
+    },
+    {
+      "name": "Peta Interaktif Spasial",
+      "short_name": "Peta Lahan",
+      "description": "Buka peta spasial Banjarnegara",
+      "url": "/map"
     }
   ]
 }

@@ -124,32 +124,56 @@ export default function LoginPage() {
             required
           />
 
-          <Input
-            label="Password"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            rightElement={
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
+          <div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '0.35rem',
+              }}
+            >
+              <label className="input-label" style={{ margin: 0 }}>
+                Password
+              </label>
+              <Link
+                href="/forgot-password"
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '4px',
-                  color: 'var(--text-muted)',
-                  display: 'flex',
-                  alignItems: 'center',
+                  fontSize: '0.75rem',
+                  color: 'var(--primary-700)',
+                  fontWeight: 600,
+                  textDecoration: 'none',
                 }}
-                title={showPassword ? 'Sembunyikan password' : 'Lihat password'}
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            }
-          />
+                Lupa password?
+              </Link>
+            </div>
+            <Input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              rightElement={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    color: 'var(--text-muted)',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  title={showPassword ? 'Sembunyikan password' : 'Lihat password'}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              }
+            />
+          </div>
 
           <Button
             type="submit"

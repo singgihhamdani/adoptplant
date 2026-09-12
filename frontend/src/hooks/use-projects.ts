@@ -27,23 +27,40 @@ export interface ProjectDetailWithRelations extends Project {
   }[]
 }
 
+import { cacheProjects, getCachedProjects } from '@/lib/offline/cache-manager'
+
 export function useProjects() {
   const supabase = createClient()
 
   return useQuery<ProjectWithStats[]>({
     queryKey: ['projects'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('projects')
-        .select(`
-          *,
-          plots:plots(count),
-          members:project_members(count)
-        `)
-        .order('created_at', { ascending: false })
+      if (typeof window !== 'undefined' && !navigator.onLine) {
+        const cached = await getCachedProjects()
+        return (cached as unknown as ProjectWithStats[]) || []
+      }
 
-      if (error) throw error
-      return (data as unknown as ProjectWithStats[]) || []
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select(`
+            *,
+            plots:plots(count),
+            members:project_members(count)
+          `)
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        const results = (data as unknown as ProjectWithStats[]) || []
+        cacheProjects(results).catch(() => {})
+        return results
+      } catch (err) {
+        const cached = await getCachedProjects()
+        if (cached && cached.length > 0) {
+          return cached as unknown as ProjectWithStats[]
+        }
+        throw err
+      }
     },
   })
 }
