@@ -49,11 +49,26 @@ export function Navbar({ title, subtitle }: NavbarProps) {
               borderLeft: '1px solid var(--border-subtle)',
             }}
           >
-            <div style={{ textAlign: 'right' }}>
-              <span style={{ fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-primary)', display: 'block', lineHeight: 1.2 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                 {user.name}
               </span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--primary-700)', fontWeight: 500 }}>
+              <span
+                style={{
+                  fontSize: '0.65rem',
+                  fontWeight: 600,
+                  color: 'var(--primary-700)',
+                  backgroundColor: 'var(--primary-50)',
+                  border: '1px solid var(--primary-200)',
+                  padding: '2px 7px',
+                  borderRadius: '9999px',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  lineHeight: 1.2,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}
+              >
                 {user.role}
               </span>
             </div>
